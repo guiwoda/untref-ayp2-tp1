@@ -1,19 +1,26 @@
 import static org.junit.Assert.*;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Test;
 
-
-abstract class TrabajoPracticoTest {
+abstract public class TrabajoPracticoTest {
 	
-	abstract protected Object getObject();
+	abstract public Object getObject();
 	
 	@Test
-	public void debeImplementarToString() {
-		fail("Not yet implemented");
+	public void debeImplementarToString() throws NoSuchMethodException, SecurityException {
+		// verifica que el objeto que testeamos haya "pisado" el toString de Object.
+		assertNotEquals(
+			getObject()
+				.getClass()
+				.getMethod("toString")
+				.getDeclaringClass(), 
+			Object.class
+		);
 	}
 	
 	@Test
 	public void debeImplementarComparable() {
-		fail("Not yet implemented");
+		assertThat(getObject(), new IsInstanceOf(Comparable.class));
 	}
 }

@@ -2,7 +2,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-
 abstract class ClienteTest extends TrabajoPracticoTest {
 
 	abstract protected Cliente getCliente();

@@ -1,28 +1,61 @@
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 
-public class CajaDeAhorroTest extends CuentaTest {
+public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro, Dolar> {
 	
-	private CajaDeAhorro cajaDeAhorro;
-	
-	@Before
 	@Override
-	protected Cuenta getCuenta() {
-		cajaDeAhorro = new CajaDeAhorro();
-		
-		return cajaDeAhorro;
+	public <Dolar> CajaDeAhorro createCuenta(int CBU) {
+		try {
+			return new CajaDeAhorro<>(CBU, createClientes());
+		} catch (Exception e) {
+			fail("Something went wrong: " + e.getMessage());
+			
+			return null;
+		}
+	}
+	
+	public Dolar createMoneda() {
+		return new Dolar();
 	}
 
+	private Set<PersonaFisica> createClientes() {
+		Set<PersonaFisica> clientes = new HashSet<PersonaFisica>();
+		clientes.add(new PersonaFisica());
+		return clientes;
+	}
+	
 	@Test
 	public void tieneAlMenosUnaPersonaFisicaAsociadaComoTitular() {
-		fail("Not yet implemented");
+		assertFalse(createCuenta(1337).getTitulares().isEmpty());
+	}
+	
+	@Test
+	public void puedeTenerMasDeUnaPersonaFisicaAsociadaComoTitular() throws Exception {
+		Set<PersonaFisica> clientes = createClientes();
+		clientes.add(new PersonaFisica());
+		
+		CajaDeAhorro<Dolar> laCuenta = new CajaDeAhorro<>(1337, clientes);
+		
+		assertEquals(2, laCuenta.getTitulares().size());
+	}
+	
+	@Test(expected=Exception.class)
+	public void noPuedeNoTenerAlMenosUnaPersonaFisicaAsociadaComoTitular() throws Exception {
+		Set<PersonaFisica> clientes = new HashSet<PersonaFisica>();
+		
+		CajaDeAhorro<Dolar> laCuenta = new CajaDeAhorro<>(1337, clientes);
 	}
 
 	@Test
 	public void noPuedeTenerSaldoNegativo() {
-		fail("Not yet implemented");
+		CajaDeAhorro<Dolar> laCuenta = createCuenta(1337);
+		
+		
 	}
 	
 	@Test

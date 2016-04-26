@@ -3,14 +3,13 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class CuentaCorrienteTest extends CuentaTest {
 
 	private CuentaCorriente cuentaCorriente;
 	
 	@Before
 	@Override
-	protected Cuenta getCuenta() {
+	protected Cuenta<T extends Dolar> createCuenta<Dolar>() {
 		cuentaCorriente = new CuentaCorriente();
 		
 		return cuentaCorriente;

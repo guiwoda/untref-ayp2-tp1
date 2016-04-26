@@ -9,7 +9,7 @@ public class CuentaEspecialTest extends CuentaTest {
 	
 	@Before
 	@Override
-	protected Cuenta getCuenta() {
+	protected Cuenta createCuenta() {
 		cuentaEspecial = new CuentaEspecial();
 		
 		return cuentaEspecial;

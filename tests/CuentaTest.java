@@ -1,34 +1,56 @@
 import static org.junit.Assert.*;
 
+import java.util.Set;
+
+import org.junit.Before;
 import org.junit.Test;
 
-abstract class CuentaTest extends TrabajoPracticoTest {
+abstract public class CuentaTest<C extends Cuenta, M extends Moneda> extends TrabajoPracticoTest {
 
-	abstract protected Cuenta getCuenta();
+	protected C cuenta;
+	
+	protected M moneda;
+	
+	protected int CBU = 45;
+	
+	abstract public <M> C createCuenta(int CBU);
+	
+	abstract public M createMoneda();
+	
+	@Before
+	public void setUp() {
+		this.cuenta = this.<M>createCuenta(CBU);
+		this.moneda = this.createMoneda();
+	}
+	
 	
 	@Override
-	protected Object getObject() {
-		return getCuenta();
+	public Object getObject() {
+		return this.<M>createCuenta(CBU);
 	}
 	
 	@Test
 	public void tieneUnCBU() {
-		fail("Not yet implemented");
+		assertEquals(CBU, cuenta.getCBU());
 	}
 	
 	@Test
 	public void tieneUnSaldo() {
-		fail("Not yet implemented");
+		assertNotNull(cuenta.getSaldo());
 	}
 	
 	@Test
 	public void tieneUnHistoricoDeTransacciones() {
-		fail("Not yet implemented");
+		assertNotNull(cuenta.getTransacciones());
 	}
 	
 	@Test
 	public void unaCuentaActivaPuedeAcreditarDinero() {
-		fail("Not yet implemented");
+		Dinero<M> dinero = new Dinero<M>(moneda, 10);
+		
+		cuenta.depositar(dinero);
+		
+		assertTrue(cuenta.getSaldo().equals(dinero));
 	}
 
 	@Test
