@@ -2,7 +2,7 @@ import java.util.Set;
 
 public class CuentaCorriente extends CuentaDeCliente<Peso, Cliente> implements Comparable<CuentaCorriente> {
 	
-	private Dinero<Peso>	sobregiro;
+	private Dinero<Peso> sobregiro;
 
 	public CuentaCorriente(int CBU, Dinero<Peso> deposito, Set<Cliente> titulares, Dinero<Peso> sobregiro) throws Exception {
 		super(
@@ -24,7 +24,8 @@ public class CuentaCorriente extends CuentaDeCliente<Peso, Cliente> implements C
 	@Override
 	public String toString() {
 		return new StringBuilder()
-			.append("Cuenta Corriente. ")
+			.append("Cuenta Corriente.")
+			.append("\n")
 			.append(super.toString())
 			.toString();
 	}

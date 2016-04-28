@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hamcrest.core.StringContains;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,6 +58,11 @@ abstract public class CuentaTest<C extends Cuenta<M>, M extends Moneda> extends 
 		}
 
 		assertEquals(inicial, cuenta.getSaldo());
+	}
+	
+	@Test
+	public void implementaToString() throws Exception {
+		assertThat(cuenta.toString(), new StringContains(String.valueOf(CBU)));
 	}
 
 	@SuppressWarnings("all")

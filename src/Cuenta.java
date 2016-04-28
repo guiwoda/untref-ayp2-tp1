@@ -39,11 +39,10 @@ abstract class Cuenta<M extends Moneda> {
 	@Override
 	public String toString() {
 		return new StringBuilder()
-			.append("CBU: ")
-			.append(CBU)
+			.append("CBU: ").append(CBU)
 			.append("\n")
-			.append("Saldo: ")
-			.append(this.saldo.toString())
+			.append("Saldo: ").append(saldo.toString())
+			.append("\n")
 			.toString();
 	}
 }

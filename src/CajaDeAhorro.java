@@ -17,7 +17,11 @@ public class CajaDeAhorro<M extends Moneda> extends CuentaDeCliente<M, PersonaFi
 	}
 
 	public String toString() {
-		return "";
+		return new StringBuilder()
+			.append("Caja de ahorro")
+			.append("\n")
+			.append(super.toString())
+			.toString();
 	}
 
 	@Override
