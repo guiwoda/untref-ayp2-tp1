@@ -8,24 +8,24 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Peso, Cliente> {
+	private Dinero<Peso> sobregiro;
+	
 	@Test
 	public void tieneUnAcuerdoDeSobregiroPactadoAlAbrir() throws Exception {
-		fail("Not yet implemented");
+		assertEquals(sobregiro, cuenta.getSobregiro());
 	}
 
 	@Test
-	public void puedeTenerSaldoNegativoHastaElMontoDeSobregiro() throws Exception {
-		fail("Not yet implemented");
+	public void puedeTenerSaldoNegativo() throws Exception {
+		cuenta.extraer(cuenta.getSaldo());
+		cuenta.extraer(sobregiro.restar(100));
+		
+		assertTrue(cuenta.getSaldo().isNegativo());
 	}
-
-	@Test
-	public void seNecesitaUnMinimoDeDineroParaAbrir() throws Exception {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void sePuedeDepositarDinero() throws Exception {
-		fail("Not yet implemented");
+	
+	@Test(expected=Exception.class)
+	public void noPuedeTenerMenorSaldoQueElMontoDeSobregiro() throws Exception {
+		cuenta.extraer(cuenta.getSaldo().sumar(sobregiro).sumar(100));
 	}
 
 	@Test
@@ -67,16 +67,16 @@ public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Pe
 	public CuentaCorriente createCuenta(int CBU) throws Exception {
 		clientes.add(createCliente());
 		
-		return createCuenta(CBU, new Dinero<Peso>(denominacion, 10), clientes);
+		return createCuenta(CBU, new Dinero<Peso>(denominacion, 10), clientes, sobregiro);
 	}
 
-	public CuentaCorriente createCuenta(int CBU, Dinero<Peso> saldo, Set<Cliente> clientes) throws Exception {
-		return new CuentaCorriente(CBU, saldo, clientes);
+	public CuentaCorriente createCuenta(int CBU, Dinero<Peso> saldo, Set<Cliente> clientes, Dinero<Peso> sobregiro) throws Exception {
+		return new CuentaCorriente(CBU, saldo, clientes, sobregiro);
 	}
 
 	@Override
 	public CuentaCorriente createCuenta(Set<Cliente> clientes) throws Exception {
-		return createCuenta(CBU, new Dinero<Peso>(Moneda.PESO, 10), clientes);
+		return createCuenta(CBU, new Dinero<Peso>(Moneda.PESO, 10), clientes, sobregiro);
 	}
 
 	@Override
@@ -92,5 +92,12 @@ public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Pe
 	@Override
 	protected Peso createDenominacion() throws Exception {
 		return Moneda.PESO;
+	}
+	
+	@Override
+	public void setUp() throws Exception {
+		sobregiro = new Dinero<Peso>(Moneda.PESO, 500);
+		
+		super.setUp();
 	}
 }

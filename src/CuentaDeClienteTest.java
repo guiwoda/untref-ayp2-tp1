@@ -42,7 +42,7 @@ abstract public class CuentaDeClienteTest<C extends CuentaDeCliente<M, T>, M ext
 
 		cuenta.depositar(deposito);
 
-		assertEquals(saldo.sumar(deposito), cuenta.getSaldo());
+		assertTrue(cuenta.getSaldo().compareTo(saldo) > 0);
 	}
 
 	@Test
@@ -76,12 +76,12 @@ abstract public class CuentaDeClienteTest<C extends CuentaDeCliente<M, T>, M ext
 	public void sePuedeTransferirDineroAOtraCuenta() throws Exception {
 		Cuenta<M> otra = createCuenta();
 		Dinero<M> monto = new Dinero<M>(denominacion, 5);
-		Dinero<M> expected = otra.getSaldo().sumar(monto);
+		Dinero<M> expected = otra.getSaldo();
 
 		cuenta.transferir(otra, monto);
 
-		assertEquals(saldo.restar(monto), cuenta.getSaldo());
-		assertEquals(expected, otra.getSaldo());
+		assertTrue(cuenta.getSaldo().compareTo(saldo) < 0);
+		assertTrue(otra.getSaldo().compareTo(expected) > 0);
 	}
 
 	@Override
