@@ -1,6 +1,6 @@
 import java.util.Set;
 
-public class CuentaCorriente extends CuentaDeCliente<Peso, Cliente> implements Comparable<CuentaCorriente> {
+public class CuentaCorriente extends CuentaDeCliente<Peso, Cliente> {
 	
 	private Dinero<Peso> sobregiro;
 
@@ -13,12 +13,6 @@ public class CuentaCorriente extends CuentaDeCliente<Peso, Cliente> implements C
 		);
 		
 		this.sobregiro = sobregiro;
-	}
-
-	@Override
-	public int compareTo(CuentaCorriente o) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 	
 	@Override

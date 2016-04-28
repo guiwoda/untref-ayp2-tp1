@@ -1,7 +1,7 @@
 import java.util.HashSet;
 import java.util.Set;
 
-abstract class Cuenta<M extends Moneda> {
+abstract class Cuenta<M extends Moneda> implements Comparable<Cuenta> {
 
 	protected int					CBU;
 	protected Dinero<M>				saldo;
@@ -44,5 +44,14 @@ abstract class Cuenta<M extends Moneda> {
 			.append("Saldo: ").append(saldo.toString())
 			.append("\n")
 			.toString();
+	}
+	
+	@Override
+	public int compareTo(Cuenta o) {
+		if (CBU == o.CBU) {
+			return 0;
+		}
+		
+		return CBU < o.CBU ? -1 : 1;
 	}
 }

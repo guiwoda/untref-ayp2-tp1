@@ -1,6 +1,6 @@
 import java.util.Set;
 
-public class CajaDeAhorro<M extends Moneda> extends CuentaDeCliente<M, PersonaFisica> implements Comparable<CajaDeAhorro<M>> {
+public class CajaDeAhorro<M extends Moneda> extends CuentaDeCliente<M, PersonaFisica> {
 
 	private final Dinero<M> interes;
 
@@ -22,12 +22,6 @@ public class CajaDeAhorro<M extends Moneda> extends CuentaDeCliente<M, PersonaFi
 			.append("\n")
 			.append(super.toString())
 			.toString();
-	}
-
-	@Override
-	public int compareTo(CajaDeAhorro<M> other) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	public Set<PersonaFisica> getTitulares() {
