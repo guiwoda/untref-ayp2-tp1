@@ -8,16 +8,16 @@ abstract class Cuenta<T extends Moneda> {
 	protected Set<Transaccion<T>>	transacciones;
 	protected boolean				estado = true;
 
-	public Cuenta(int CBU, Dinero<T> saldo) throws Exception {
-		if (saldo.isNegativo()) {
-			throw new Exception("Una cuenta no puede iniciar con saldo negativo.");
+	public Cuenta(int CBU, Dinero<T> deposito) throws Exception {
+		if (deposito.isNegativo()) {
+			throw new Exception("Una cuenta no puede iniciar con un depósito negativo.");
 		}
 
 		this.CBU = CBU;
 		this.transacciones = new HashSet<>();
-		this.saldo = new Dinero<T>(saldo.getMoneda(), 0);
+		this.saldo = new Dinero<T>(deposito.getMoneda(), 0);
 		
-		depositar(saldo);
+		depositar(deposito);
 	}
 
 	public Dinero<T> depositar(Dinero<T> dinero) throws Exception {

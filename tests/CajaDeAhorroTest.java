@@ -61,16 +61,16 @@ public class CajaDeAhorroTest extends CuentaTest {
 	public void tieneUnCostoDeMantenimientoFijoEnDolares() {
 		CajaDeAhorro<Moneda> cuenta = cuenta();
 
-		assertEquals(Banco.getMantenimiento(cuenta), cuenta.getCostoDeMantenimiento());
+		assertEquals(denominacion.getMantenimientoCajaDeAhorro(), cuenta.getCostoDeMantenimiento());
 	}
 
 	@Test
-	public void tieneUnCostoDeMantenimientoFijoEnPesos() {
+	public void tieneUnCostoDeMantenimientoFijoEnPesos() throws Exception {
 		denominacion = new Peso();
 
-		CajaDeAhorro<Moneda> cuenta = createCuenta();
+		CajaDeAhorro<Moneda> cuenta = createCuenta(denominacion);
 
-		assertEquals(Banco.getMantenimiento(cuenta), cuenta.getCostoDeMantenimiento());
+		assertEquals(denominacion.getMantenimientoCajaDeAhorro(), cuenta.getCostoDeMantenimiento());
 	}
 
 	@Test
@@ -120,11 +120,17 @@ public class CajaDeAhorroTest extends CuentaTest {
 	public CajaDeAhorro<Moneda> createCuenta() {
 		return createCuenta(CBU);
 	}
+	
+	public CajaDeAhorro<Moneda> createCuenta(Moneda denominacion) throws Exception {
+		clientes.add(new PersonaFisica());
+		return createCuenta(new Dinero<Moneda>(denominacion, SALDO), CBU, clientes, interes);
+	}
 
 	@Override
 	public CajaDeAhorro<Moneda> createCuenta(int CBU) {
-		clientes.add(new PersonaFisica());
 		try {
+			clientes.add(new PersonaFisica());
+			
 			return createCuenta(saldo, CBU, clientes, interes);
 		} catch (Exception e) {
 			fail("Something went wrong: " + e.getMessage());

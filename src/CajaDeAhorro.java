@@ -6,6 +6,7 @@ public class CajaDeAhorro<T extends Moneda> extends Cuenta<T> implements Compara
 	private final Dinero<T>				mantenimiento;
 	private final Dinero<T>				interes;
 
+	@SuppressWarnings("unchecked")
 	public CajaDeAhorro(int CBU, Dinero<T> depositoInicial, Set<PersonaFisica> titulares, Dinero<T> interes) throws Exception {
 		super(CBU, depositoInicial);
 
@@ -14,7 +15,7 @@ public class CajaDeAhorro<T extends Moneda> extends Cuenta<T> implements Compara
 		}
 
 		this.titulares = titulares;
-		this.mantenimiento = Banco.getMantenimiento(this);
+		this.mantenimiento = (Dinero<T>) getDenominacion().getMantenimientoCajaDeAhorro();
 		this.interes = interes;
 	}
 
