@@ -4,40 +4,44 @@ public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
 	private T	moneda;
 	private int centavos;
 
-	public Dinero(T moneda, int centavos) {
+	public Dinero(T moneda, int centavos) throws Exception {
+		if (moneda == null) {
+			throw new Exception("El dinero necesita ser de una moneda específica.");
+		}
+		
 		this.moneda = moneda;
 		this.centavos = centavos;
 	}
 	
-	public Dinero(T moneda, float monto) {
+	public Dinero(T moneda, float monto) throws Exception {
 		this(moneda, Math.round(monto * 100));
 	}
 
-	public Dinero<T> sumar(Dinero<T> dinero) {
+	public Dinero<T> sumar(Dinero<T> dinero) throws Exception {
 		return sumar(dinero.centavos);
 	}
 
-	public Dinero<T> restar(Dinero<T> dinero) {
+	public Dinero<T> restar(Dinero<T> dinero) throws Exception {
 		return restar(dinero.centavos);
 	}
 	
-	public Dinero<T> sumar(int centavos) {
+	public Dinero<T> sumar(int centavos) throws Exception {
 		return new Dinero<T>(moneda, this.centavos + centavos);
 	}
 
-	public Dinero<T> restar(int centavos) {
+	public Dinero<T> restar(int centavos) throws Exception {
 		return new Dinero<T>(moneda, this.centavos - centavos);
 	}
 	
-	public Dinero<T> sumar(float monto) {
+	public Dinero<T> sumar(float monto) throws Exception {
 		return new Dinero<T>(moneda, (float) this.centavos + monto);
 	}
 
-	public Dinero<T> restar(float monto) {
+	public Dinero<T> restar(float monto) throws Exception {
 		return new Dinero<T>(moneda, (float) this.centavos - monto);
 	}
 	
-	public Dinero<T> invertir() {
+	public Dinero<T> invertir() throws Exception {
 		return new Dinero<T>(moneda, 0).restar(this);
 	}
 	
@@ -58,12 +62,12 @@ public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
 	}
 	
 	@Override
-	public int compareTo(Dinero<T> o) {
-		if (centavos > o.centavos) {
+	public int compareTo(Dinero<T> other) {
+		if (centavos > other.centavos) {
 			return 1;
 		}
 
-		if (centavos < o.centavos) {
+		if (centavos < other.centavos) {
 			return -1;
 		}
 
@@ -73,10 +77,11 @@ public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-
+		
 		int result = 1;
 		result = prime * result + centavos;
-
+		result = prime * result + moneda.hashCode();
+		
 		return result;
 	}
 
@@ -86,7 +91,9 @@ public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
 	}
 
 	public boolean equals(Dinero other) {
-		return moneda.equals(other.moneda) && centavos == other.centavos;
+		return 
+			moneda.equals(other.moneda) && 
+			centavos == other.centavos;
 	}
 
 	@Override

@@ -1,21 +1,18 @@
 import java.util.Set;
 
-public class CajaDeAhorro<T extends Moneda> extends Cuenta<T> implements Comparable<CajaDeAhorro> {
+public class CajaDeAhorro<M extends Moneda> extends Cuenta<M, PersonaFisica> implements Comparable<CajaDeAhorro<M>> {
 
-	private final Set<PersonaFisica>	titulares;
-	private final Dinero<T>				mantenimiento;
-	private final Dinero<T>				interes;
+	private final Dinero<M> interes;
 
 	@SuppressWarnings("unchecked")
-	public CajaDeAhorro(int CBU, Dinero<T> depositoInicial, Set<PersonaFisica> titulares, Dinero<T> interes) throws Exception {
-		super(CBU, depositoInicial);
-
-		if (titulares.isEmpty()) {
-			throw new Exception("Una caja de ahorro requiere al menos un cliente asociado.");
-		}
-
-		this.titulares = titulares;
-		this.mantenimiento = (Dinero<T>) getDenominacion().getMantenimientoCajaDeAhorro();
+	public CajaDeAhorro(int CBU, Dinero<M> deposito, Set<PersonaFisica> titulares, Dinero<M> interes) throws Exception {
+		super(
+			CBU, 
+			deposito, 
+			(Dinero<M>) deposito.getMoneda().getMantenimientoCajaDeAhorro(),
+			titulares
+		);
+		
 		this.interes = interes;
 	}
 
@@ -24,7 +21,7 @@ public class CajaDeAhorro<T extends Moneda> extends Cuenta<T> implements Compara
 	}
 
 	@Override
-	public int compareTo(CajaDeAhorro other) {
+	public int compareTo(CajaDeAhorro<M> other) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -34,8 +31,8 @@ public class CajaDeAhorro<T extends Moneda> extends Cuenta<T> implements Compara
 	}
 
 	@Override
-	public Dinero<T> extraer(Dinero<T> dinero) throws Exception {
-		Dinero<T> resultado = saldo.restar(dinero);
+	public Dinero<M> extraer(Dinero<M> dinero) throws Exception {
+		Dinero<M> resultado = saldo.restar(dinero);
 
 		if (resultado.isNegativo()) {
 			throw new Exception("Las cajas de ahorro no pueden tener saldo negativo.");
@@ -44,21 +41,11 @@ public class CajaDeAhorro<T extends Moneda> extends Cuenta<T> implements Compara
 		return super.extraer(dinero);
 	}
 
-	public Dinero<T> getCostoDeMantenimiento() {
+	public Dinero<M> getCostoDeMantenimiento() {
 		return mantenimiento;
 	}
 
-	public T getDenominacion() {
-		return saldo.getMoneda();
-	}
-
-	public void transferir(Cuenta<T> otra, Dinero<T> monto) {
-		saldo = saldo.restar(monto);
-		otra.saldo = otra.saldo.sumar(monto);
-
-	}
-
-	public Dinero<T> getInteres() {
+	public Dinero<M> getInteres() {
 		return interes;
 	}
 }

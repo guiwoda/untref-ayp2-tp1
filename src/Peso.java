@@ -1,6 +1,6 @@
 
 public class Peso implements Moneda {
-	private static final Dinero<Moneda> mantenimientoCajaDeAhorro = new Dinero<Moneda>(new Peso(), 1500);
+	private static final int MANTENIMIENTO_CAJA_DE_AHORRO = 1500;
 	
 	@Override
 	public String getSimbolo() {
@@ -9,6 +9,20 @@ public class Peso implements Moneda {
 	
 	@Override
 	public Dinero<Moneda> getMantenimientoCajaDeAhorro() {
-		return mantenimientoCajaDeAhorro;
+		try {
+			return new Dinero<Moneda>(new Peso(), MANTENIMIENTO_CAJA_DE_AHORRO);
+		} catch (Exception e) {
+			throw new Error();
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return 1;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof Peso;
 	}
 }
