@@ -5,10 +5,10 @@ import org.junit.Test;
 
 abstract public class TrabajoPracticoTest {
 	
-	abstract public Object getObject();
+	abstract public Object getObject() throws Exception;
 	
 	@Test
-	public void debeImplementarToString() throws NoSuchMethodException, SecurityException {
+	public void debeImplementarToString() throws Exception {
 		// verifica que el objeto que testeamos haya "pisado" el toString de Object.
 		assertNotEquals(
 			getObject()
@@ -20,7 +20,7 @@ abstract public class TrabajoPracticoTest {
 	}
 	
 	@Test
-	public void debeImplementarComparable() {
+	public void debeImplementarComparable() throws Exception {
 		assertThat(getObject(), new IsInstanceOf(Comparable.class));
 	}
 }

@@ -1,6 +1,6 @@
 import java.util.Set;
 
-public class CajaDeAhorro<M extends Moneda> extends Cuenta<M, PersonaFisica> implements Comparable<CajaDeAhorro<M>> {
+public class CajaDeAhorro<M extends Moneda> extends CuentaDeCliente<M, PersonaFisica> implements Comparable<CajaDeAhorro<M>> {
 
 	private final Dinero<M> interes;
 

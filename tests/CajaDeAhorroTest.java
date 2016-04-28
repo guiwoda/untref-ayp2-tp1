@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro<Moneda>, Moneda, PersonaFisica> {
+public class CajaDeAhorroTest extends CuentaDeClienteTest<CajaDeAhorro<Moneda>, Moneda, PersonaFisica> {
 
 	private static final int	COSTO			= 7;
 	private static final int    INTERES         = 4;
@@ -22,19 +22,19 @@ public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro<Moneda>, Moneda, P
 	}
 
 	@Test
-	public void puedeEstarNominadaEnDolares() {
+	public void puedeEstarNominadaEnDolares() throws Exception {
 		assertNotNull(createCuenta());
 	}
 
 	@Test
-	public void puedeEstarNominadaEnPesos() {
-		denominacion = new Peso();
+	public void puedeEstarNominadaEnPesos() throws Exception {
+		denominacion = Moneda.PESO;
 
 		assertNotNull(createCuenta());
 	}
 
 	@Test
-	public void tieneUnCostoDeMantenimientoFijoEnDolares() {
+	public void tieneUnCostoDeMantenimientoFijoEnDolares() throws Exception {
 		CajaDeAhorro<Moneda> cuenta = cuenta();
 
 		assertEquals(denominacion.getMantenimientoCajaDeAhorro(), cuenta.getCostoDeMantenimiento());
@@ -42,7 +42,7 @@ public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro<Moneda>, Moneda, P
 
 	@Test
 	public void tieneUnCostoDeMantenimientoFijoEnPesos() throws Exception {
-		denominacion = new Peso();
+		denominacion = Moneda.PESO;
 
 		CajaDeAhorro<Moneda> cuenta = createCuenta(denominacion);
 
@@ -50,7 +50,7 @@ public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro<Moneda>, Moneda, P
 	}
 
 	@Test
-	public void seDebeDepositarUnMontoAlAbrir() {
+	public void seDebeDepositarUnMontoAlAbrir() throws Exception {
 		assertTrue(cuenta().getSaldo().isPositivo());
 	}
 
@@ -71,12 +71,12 @@ public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro<Moneda>, Moneda, P
 	}
 
 	@Test
-	public void tieneUnaTasaDeInteresPactadaAlAbrir() {
+	public void tieneUnaTasaDeInteresPactadaAlAbrir() throws Exception {
 		assertEquals(interes, cuenta().getInteres());
 	}
 	
 	@Override
-	public Set<PersonaFisica> createClientes() {
+	public Set<PersonaFisica> createClientes() throws Exception {
 		return new HashSet<PersonaFisica>();
 	}
 
@@ -86,16 +86,10 @@ public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro<Moneda>, Moneda, P
 	}
 
 	@Override
-	public CajaDeAhorro<Moneda> createCuenta(int CBU) {
-		try {
-			clientes.add(createCliente());
-			
-			return createCuenta(saldo, CBU, clientes, interes);
-		} catch (Exception e) {
-			fail();
-		}
-
-		return null;
+	public CajaDeAhorro<Moneda> createCuenta(int CBU) throws Exception {
+		clientes.add(createCliente());
+		
+		return createCuenta(saldo, CBU, clientes, interes);
 	}
 
 	public CajaDeAhorro<Moneda> createCuenta(Dinero<Moneda> saldo, int CBU, Set<PersonaFisica> clientes, Dinero<Moneda> interes) throws Exception {
@@ -103,12 +97,12 @@ public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro<Moneda>, Moneda, P
 	}
 
 	@SuppressWarnings("all")
-	public CajaDeAhorro<Moneda> cuenta() {
+	public CajaDeAhorro<Moneda> cuenta() throws Exception {
 		return (CajaDeAhorro<Moneda>) this.cuenta;
 	}
 
 	@After
-	public void cleanUp() {
+	public void cleanUp() throws Exception {
 		clientes.clear();
 	}
 
@@ -118,13 +112,13 @@ public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro<Moneda>, Moneda, P
 	}
 
 	@Override
-	public PersonaFisica createCliente() {
+	public PersonaFisica createCliente() throws Exception {
 		return new PersonaFisica();
 	}
 
 	@Override
-	protected Moneda createDenominacion() {
-		return new Dolar();
+	protected Moneda createDenominacion() throws Exception {
+		return Moneda.DOLAR;
 	}
 	
 	@Override
