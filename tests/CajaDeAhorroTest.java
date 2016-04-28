@@ -3,98 +3,147 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hamcrest.core.IsInstanceOf;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CajaDeAhorroTest extends CuentaTest<CajaDeAhorro, Dolar> {
-	
-	@Override
-	public <Dolar> CajaDeAhorro createCuenta(int CBU) {
-		try {
-			return new CajaDeAhorro<>(CBU, createClientes());
-		} catch (Exception e) {
-			fail("Something went wrong: " + e.getMessage());
-			
-			return null;
-		}
-	}
-	
-	public Dolar createMoneda() {
-		return new Dolar();
-	}
+public class CajaDeAhorroTest extends CuentaTest {
 
-	private Set<PersonaFisica> createClientes() {
-		Set<PersonaFisica> clientes = new HashSet<PersonaFisica>();
-		clientes.add(new PersonaFisica());
-		return clientes;
-	}
-	
+	private static final int	COSTO			= 7;
+	private static final int	SALDO			= 10;
+	private static final int    INTERES         = 4;
+
+	private Moneda				denominacion	= new Dolar();
+	private Dinero<Moneda>		mantenimiento	= new Dinero<Moneda>(denominacion, COSTO);
+	private Dinero<Moneda>		saldo			= new Dinero<Moneda>(denominacion, SALDO);
+	private Dinero<Moneda>		interes			= new Dinero<Moneda>(denominacion, INTERES);
+	private Set<PersonaFisica>	clientes		= new HashSet<PersonaFisica>();
+
 	@Test
 	public void tieneAlMenosUnaPersonaFisicaAsociadaComoTitular() {
-		assertFalse(createCuenta(1337).getTitulares().isEmpty());
-	}
-	
-	@Test
-	public void puedeTenerMasDeUnaPersonaFisicaAsociadaComoTitular() throws Exception {
-		Set<PersonaFisica> clientes = createClientes();
-		clientes.add(new PersonaFisica());
-		
-		CajaDeAhorro<Dolar> laCuenta = new CajaDeAhorro<>(1337, clientes);
-		
-		assertEquals(2, laCuenta.getTitulares().size());
-	}
-	
-	@Test(expected=Exception.class)
-	public void noPuedeNoTenerAlMenosUnaPersonaFisicaAsociadaComoTitular() throws Exception {
-		Set<PersonaFisica> clientes = new HashSet<PersonaFisica>();
-		
-		CajaDeAhorro<Dolar> laCuenta = new CajaDeAhorro<>(1337, clientes);
+		assertFalse(cuenta().getTitulares().isEmpty());
 	}
 
 	@Test
-	public void noPuedeTenerSaldoNegativo() {
-		CajaDeAhorro<Dolar> laCuenta = createCuenta(1337);
-		
-		
+	public void puedeTenerMasDeUnaPersonaFisicaAsociadaComoTitular() {
+		clientes.clear();
+		clientes.add(new PersonaFisica());
+
+		assertEquals(2, createCuenta().getTitulares().size());
 	}
-	
-	@Test
-	public void puedeEstarNominadaEnPesos() {
-		fail("Not yet implemented");
+
+	@Test(expected = Exception.class)
+	public void noPuedeNoTenerAlMenosUnaPersonaFisicaAsociadaComoTitular() throws Exception {
+		clientes.clear();
+
+		createCuenta(saldo, CBU, clientes, interes);
 	}
-	
+
+	@Test(expected = Exception.class)
+	public void noPuedeTenerSaldoNegativo() throws Exception {
+		cuenta().extraer(new Dinero<>(denominacion, 9999));
+	}
+
 	@Test
 	public void puedeEstarNominadaEnDolares() {
-		fail("Not yet implemented");
+		assertNotNull(createCuenta());
 	}
-	
+
 	@Test
-	public void tieneUnCostoDeMantenimientoFijoEnLaMonedaEnQueEstaNominada() {
-		fail("Not yet implemented");
+	public void puedeEstarNominadaEnPesos() {
+		denominacion = new Peso();
+
+		assertNotNull(createCuenta());
 	}
-	
+
+	@Test
+	public void tieneUnCostoDeMantenimientoFijoEnDolares() {
+		CajaDeAhorro<Moneda> cuenta = cuenta();
+
+		assertEquals(Banco.getMantenimiento(cuenta), cuenta.getCostoDeMantenimiento());
+	}
+
+	@Test
+	public void tieneUnCostoDeMantenimientoFijoEnPesos() {
+		denominacion = new Peso();
+
+		CajaDeAhorro<Moneda> cuenta = createCuenta();
+
+		assertEquals(Banco.getMantenimiento(cuenta), cuenta.getCostoDeMantenimiento());
+	}
+
 	@Test
 	public void seDebeDepositarUnMontoAlAbrir() {
-		fail("Not yet implemented");
+		assertTrue(cuenta().getSaldo().isPositivo());
 	}
-	
+
 	@Test
-	public void sePuedeDepositarDinero() {
-		fail("Not yet implemented");
+	public void sePuedeDepositarDinero() throws Exception {
+		Dinero<Moneda> dinero = new Dinero<Moneda>(denominacion, 40);
+		cuenta().depositar(dinero);
+
+		assertEquals(saldo.sumar(dinero), cuenta().getSaldo());
 	}
-	
+
 	@Test
-	public void sePuedeExtraerDinero() {
-		fail("Not yet implemented");
+	public void sePuedeExtraerDinero() throws Exception {
+		Dinero<Moneda> dinero = new Dinero<Moneda>(denominacion, 2);
+		cuenta().extraer(dinero);
+
+		assertEquals(saldo.restar(dinero), cuenta().getSaldo());
 	}
-	
+
 	@Test
 	public void sePuedeTransferirDineroAOtraCuenta() {
-		fail("Not yet implemented");
+		Cuenta<Moneda> otra     = createCuenta();
+		Dinero<Moneda> monto    = new Dinero<>(denominacion, 5);
+		Dinero<Moneda> expected = otra.getSaldo().sumar(monto);
+
+		cuenta().transferir(otra, monto);
+
+		assertEquals(saldo.restar(monto), cuenta().getSaldo());
+		assertEquals(expected, otra.getSaldo());
 	}
-	
+
 	@Test
 	public void tieneUnaTasaDeInteresPactadaAlAbrir() {
-		fail("Not yet implemented");
+		assertEquals(interes, cuenta().getInteres());
+	}
+
+	@Override
+	public Moneda createMoneda() {
+		return denominacion;
+	}
+
+	@Override
+	public CajaDeAhorro<Moneda> createCuenta() {
+		return createCuenta(CBU);
+	}
+
+	@Override
+	public CajaDeAhorro<Moneda> createCuenta(int CBU) {
+		clientes.add(new PersonaFisica());
+		try {
+			return createCuenta(saldo, CBU, clientes, interes);
+		} catch (Exception e) {
+			fail("Something went wrong: " + e.getMessage());
+		}
+
+		return null;
+	}
+
+	public CajaDeAhorro<Moneda> createCuenta(Dinero<Moneda> saldo, int CBU, Set<PersonaFisica> clientes, Dinero<Moneda> interes) throws Exception {
+		return new CajaDeAhorro<Moneda>(CBU, saldo, clientes, interes);
+	}
+
+	@SuppressWarnings("all")
+	public CajaDeAhorro<Moneda> cuenta() {
+		return (CajaDeAhorro<Moneda>) this.cuenta;
+	}
+
+	@After
+	public void cleanUp() {
+		clientes.clear();
 	}
 }

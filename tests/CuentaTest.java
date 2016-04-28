@@ -7,13 +7,17 @@ import org.junit.Test;
 
 abstract public class CuentaTest<C extends Cuenta, M extends Moneda> extends TrabajoPracticoTest {
 
+	protected static final int CBU = 1337;
+	
 	protected C cuenta;
 	
 	protected M moneda;
 	
-	protected int CBU = 45;
-	
 	abstract public <M> C createCuenta(int CBU);
+	
+	public <M> C createCuenta() {
+		return createCuenta(CBU);
+	}
 	
 	abstract public M createMoneda();
 	
@@ -45,31 +49,52 @@ abstract public class CuentaTest<C extends Cuenta, M extends Moneda> extends Tra
 	}
 	
 	@Test
-	public void unaCuentaActivaPuedeAcreditarDinero() {
-		Dinero<M> dinero = new Dinero<M>(moneda, 10);
+	public void unaCuentaActivaPuedeAcreditarDinero() throws Exception {
+		Dinero<M> saldo = cuenta.getSaldo();
+		Dinero<M> deposito = new Dinero<M>(moneda, 10);
 		
-		cuenta.depositar(dinero);
+		cuenta.depositar(deposito);
 		
-		assertTrue(cuenta.getSaldo().equals(dinero));
+		assertEquals(saldo.sumar(deposito), cuenta.getSaldo());
 	}
 
 	@Test
-	public void unaCuentaActivaPuedeDebitarDinero() {
-		fail("Not yet implemented");
+	public void unaCuentaActivaPuedeDebitarDinero() throws Exception {
+		Dinero<M> saldo = cuenta.getSaldo();
+		Dinero<M> extraccion = new Dinero<M>(moneda, 6);
+		cuenta.extraer(extraccion);
+		
+		assertEquals(saldo.restar(extraccion), cuenta.getSaldo());
 	}
 	
-	@Test
-	public void unaCuentaInactivaNoPuedeAcreditarDinero() {
-		fail("Not yet implemented");
+	@Test(expected=Exception.class)
+	public void unaCuentaInactivaNoPuedeAcreditarDinero() throws Exception {
+		cuenta.inactivar();
+		
+		cuenta.depositar(new Dinero<M>(moneda, 10));
 	}
 
-	@Test
-	public void unaCuentaInactivaNoPuedeDebitarDinero() {
-		fail("Not yet implemented");
+	@Test(expected=Exception.class)
+	public void unaCuentaInactivaNoPuedeDebitarDinero() throws Exception {
+		cuenta.inactivar();
+		
+		cuenta.extraer(new Dinero<M>(moneda, 10));
 	}
 	
 	@Test
-	public void elSaldoDebeSerIgualQueLaSumaDeSusMovimientos() {
-		fail("Not yet implemented");
+	@SuppressWarnings("all")
+	public void elSaldoDebeSerIgualQueLaSumaDeSusMovimientos() throws Exception {
+		cuenta.depositar(new Dinero<M>(moneda, 15));
+		cuenta.depositar(new Dinero<M>(moneda, 10));
+		cuenta.extraer(new Dinero<M>(moneda, 5));
+		
+		Dinero<M> inicial = new Dinero<M>(moneda, 0);
+		
+		Set<Transaccion> transacciones = cuenta.getTransacciones();
+		for (Transaccion current : transacciones) {
+			inicial = inicial.sumar(current.getMonto().getCentavos());
+		}
+		
+		assertEquals(inicial, cuenta.getSaldo());
 	}
 }
