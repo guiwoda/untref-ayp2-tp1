@@ -51,7 +51,7 @@ public class CuentaCorriente extends CuentaDeCliente<Peso, Cliente> {
 		// Distribuyo el dinero a depositar entre la retención y el depósito final
 		Dinero<Peso>[] depositos = dinero.distribuir(partes);
 		
-		if (saldo.restar(dinero).restar(depositos[0]).compareTo(sobregiro.invertir()) < 0) {
+		if (operacionSuperaSobregiroPermitido(dinero.sumar(depositos[0]))) {
 			throw new Exception("No se puede extraer el monto ya que supera el sobregiro habilitado a la cuenta.");
 		}
 		
@@ -59,6 +59,10 @@ public class CuentaCorriente extends CuentaDeCliente<Peso, Cliente> {
 		Banco.instance().getRetenciones().depositar(depositos[0]);
 		
 		return super.extraer(dinero);
+	}
+
+	private boolean operacionSuperaSobregiroPermitido(Dinero<Peso> montoAExtraer) throws Exception {
+		return saldo.restar(montoAExtraer).compareTo(sobregiro.invertir()) < 0;
 	}
 
 	public Dinero<Peso> getSobregiro() {

@@ -51,9 +51,8 @@ abstract public class CuentaTest<C extends Cuenta<M>, M extends Moneda> extends 
 
 		Dinero<M> inicial = new Dinero<M>(denominacion, 0);
 
-		Set<Transaccion<M>> transacciones = cuenta.getTransacciones();
-		for (Transaccion current : transacciones) {
-			inicial = inicial.sumar(current.getMonto());
+		for (Transaccion current : cuenta.getTransacciones()) {
+			inicial = (Dinero<M>) current.aplicar((Dinero<Moneda>) inicial);
 		}
 
 		assertEquals(inicial, cuenta.getSaldo());

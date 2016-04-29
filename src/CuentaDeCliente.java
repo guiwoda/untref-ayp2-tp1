@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.Set;
 
 public class CuentaDeCliente<M extends Moneda, C extends Cliente> extends Cuenta<M> {
@@ -32,13 +33,15 @@ public class CuentaDeCliente<M extends Moneda, C extends Cliente> extends Cuenta
 		return super.depositar(dinero);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Dinero<M> extraer(Dinero<M> dinero) throws Exception {
 		if (!activa) {
 			throw new Exception("Una cuenta inactiva no puede extraer dinero.");
 		}
 		
-		saldo = saldo.restar(dinero);
-		transacciones.add(new Transaccion<M>(dinero.invertir()));
+		transacciones.add(Transaccion.debito(new Date(), (Dinero<Moneda>) dinero, ""));
+		
+		saldo = calcularSaldo();
 
 		return saldo;
 	}
