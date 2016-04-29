@@ -3,16 +3,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class GestionDeClientesTest extends TrabajoPracticoTest {
+public class GestionDeClientesTest extends TrabajoPracticoTest<GestionDeClientes> {
 	
-	private GestionDeClientes clientes;
-	
-	@Before
 	@Override
-	protected Object getObject() {
-		clientes = new GestionDeClientes();
-		
-		return clientes;
+	protected GestionDeClientes getObject() {
+		return new GestionDeClientes();
 	}
 	
 	@Test

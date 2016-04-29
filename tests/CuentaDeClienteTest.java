@@ -12,7 +12,7 @@ abstract public class CuentaDeClienteTest<C extends CuentaDeCliente<M, T>, M ext
 
 	abstract public Set<T> createClientes() throws Exception;
 
-	abstract public T createCliente() throws Exception;
+	abstract public T createCliente(String cuit) throws Exception;
 	
 	@Test
 	public void tieneAlMenosUnCliente() throws Exception {
@@ -22,7 +22,7 @@ abstract public class CuentaDeClienteTest<C extends CuentaDeCliente<M, T>, M ext
 	@Test
 	public void puedeTenerMasDeUnCliente() throws Exception {
 		clientes.clear();
-		clientes.add(createCliente());
+		clientes.add(createCliente("20-87654321-0"));
 
 		assertEquals(2, createCuenta().getTitulares().size());
 	}

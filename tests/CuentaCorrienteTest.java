@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,7 +66,7 @@ public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Pe
 
 	@Override
 	public CuentaCorriente createCuenta(int CBU) throws Exception {
-		clientes.add(createCliente());
+		clientes.add(createCliente("20-23455432-1"));
 		
 		return createCuenta(CBU, new Dinero<Peso>(denominacion, 10), clientes, sobregiro);
 	}
@@ -85,8 +86,8 @@ public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Pe
 	}
 
 	@Override
-	public Cliente createCliente() throws Exception {
-		return new PersonaJuridica();
+	public Cliente createCliente(String cuit) throws Exception {
+		return new PersonaJuridica("Acme Co.", cuit, new Domicilio(), "5555-4444", new Date(1445385600));
 	}
 
 	@Override

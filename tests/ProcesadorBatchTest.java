@@ -3,16 +3,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ProcesadorBatchTest extends TrabajoPracticoTest {
+public class ProcesadorBatchTest extends TrabajoPracticoTest<ProcesadorBatch> {
 
-	private ProcesadorBatch batch;
-	
-	@Before
 	@Override
-	protected Object getObject() {
-		batch = new ProcesadorBatch();
-		
-		return batch;
+	protected ProcesadorBatch getObject() {
+		return new ProcesadorBatch();
 	}
 	
 	@Test

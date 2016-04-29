@@ -3,40 +3,54 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PersonaFisicaTest extends ClienteTest {
+public class PersonaFisicaTest extends ClienteTest<PersonaFisica> {
 
-	private PersonaFisica personaFisica;
+	private Documento	documento;
+	private EstadoCivil	estadoCivil;
+	private String	profesion;
+	private String	conyuge;
 	
-	@Before
 	@Override
-	protected Cliente getCliente() {
-		personaFisica = new PersonaFisica();
-		
-		return personaFisica;
-	}
-	
-	@Test
-	public void necesitaMasDetallesAlRegistrar() {
-		fail("Not yet implemented");
+	protected PersonaFisica getCliente() {
+		return new PersonaFisica(
+			razonSocial, 
+			cuit, 
+			domicilio, 
+			telefono,
+			documento,
+			estadoCivil,
+			profesion,
+			conyuge
+		);
 	}
 
 	@Test
 	public void tieneUnDocumento() {
-		fail("Not yet implemented");
+		assertEquals(documento, cliente.getDocumento());
 	}
 
 	@Test
 	public void tieneUnEstadoCivil() {
-		fail("Not yet implemented");
+		assertEquals(estadoCivil, cliente.getEstadoCivil());
 	}
 
 	@Test
 	public void tieneUnaProfesion() {
-		fail("Not yet implemented");
+		assertEquals(profesion, cliente.getProfesion());
 	}
 
 	@Test
 	public void tieneDatosDelConyuge() {
-		fail("Not yet implemented");
+		assertEquals(conyuge, cliente.getConyuge());
+	}
+	
+	@Override
+	public void setUp() throws Exception {
+		documento = Documento.dni(32000555);
+		estadoCivil = EstadoCivil.SOLTERO;
+		profesion = "Programador";
+		conyuge = "Clementina Josefa Pueyrredón Alvear";
+		
+		super.setUp();
 	}
 }

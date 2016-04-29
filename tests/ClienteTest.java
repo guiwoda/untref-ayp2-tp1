@@ -1,38 +1,55 @@
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
-abstract class ClienteTest extends TrabajoPracticoTest {
+abstract public class ClienteTest<C extends Cliente> extends TrabajoPracticoTest<C> {
 
-	abstract protected Cliente getCliente();
+	protected C cliente;
+	protected String razonSocial;
+	protected String cuit;
+	protected Domicilio domicilio;
+	protected String telefono;
+	
+	abstract protected C getCliente();
 	
 	@Override
-	protected Object getObject() {
+	public C getObject() {
 		return getCliente();
 	}
 	
 	@Test
 	public void necesitaDatosMinimosParaRegistrarse() {
-		fail("Not yet implemented");
+		assertNotNull(cliente);
 	}
 
 	@Test
 	public void tieneUnaRazonSocial() {
-		fail("Not yet implemented");
+		assertEquals(razonSocial, cliente.getRazonSocial());
 	}
 	
 	@Test
 	public void tieneUnCUIT() {
-		fail("Not yet implemented");
+		assertEquals(cuit, cliente.getCuit());
 	}
 	
 	@Test
 	public void tieneUnDomicilio() {
-		fail("Not yet implemented");
+		assertEquals(domicilio, cliente.getDomicilio());
 	}
 	
 	@Test
 	public void tieneUnTelefono() {
-		fail("Not yet implemented");
+		assertEquals(telefono, cliente.getTelefono());
+	}
+	
+	@Before
+	public void setUp() throws Exception {
+		razonSocial = "ACME Co.";
+		cuit = "20-12345678-9";
+		domicilio = new Domicilio();
+		telefono = "5555-4444";
+		
+		cliente = getCliente();
 	}
 }

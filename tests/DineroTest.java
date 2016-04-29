@@ -2,7 +2,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class DineroTest {
+public class DineroTest extends TrabajoPracticoTest<Dinero> {
 
 	@Test
 	public void puedoSumarloConOtroDinero() throws Exception {
@@ -29,4 +29,8 @@ public class DineroTest {
 		assertEquals(dinero, resultado[0].sumar(resultado[1]));
 	}
 
+	@Override
+	protected Dinero getObject() throws Exception {
+		return new Dinero<Peso>(Moneda.PESO, 10);
+	}
 }

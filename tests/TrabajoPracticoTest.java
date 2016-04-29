@@ -3,9 +3,9 @@ import static org.junit.Assert.*;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Test;
 
-abstract public class TrabajoPracticoTest {
+abstract public class TrabajoPracticoTest<C> {
 	
-	abstract public Object getObject() throws Exception;
+	abstract protected C getObject() throws Exception;
 	
 	@Test
 	public void debeImplementarToString() throws Exception {

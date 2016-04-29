@@ -1,27 +1,19 @@
 import static org.junit.Assert.*;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 
-public class PersonaJuridicaTest extends ClienteTest {
-
-	private PersonaJuridica personaJuridica;
-	
-	@Before
+public class PersonaJuridicaTest extends ClienteTest<PersonaJuridica> {
+	private Date fechaContratoSocial = new Date(1445385600);
 	@Override
-	protected Cliente getCliente() {
-		personaJuridica = new PersonaJuridica();
-		
-		return personaJuridica;
-	}
-
-	@Test
-	public void necesitaLaFechaDelContratoSocialAlRegistrar() {
-		fail("Not yet implemented");
+	protected PersonaJuridica getCliente() {
+		return new PersonaJuridica(razonSocial, cuit, domicilio, telefono, fechaContratoSocial);
 	}
 
 	@Test
 	public void tieneUnaFechaDeContratoSocial() {
-		fail("Not yet implemented");
+		assertEquals(fechaContratoSocial, cliente.getFechaContratoSocial());
 	}
 }

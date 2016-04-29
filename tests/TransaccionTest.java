@@ -3,16 +3,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TransaccionTest extends TrabajoPracticoTest {
+public class TransaccionTest extends TrabajoPracticoTest<Transaccion<Peso>> {
 
-	private Transaccion transaccion;
-	
-	@Before
 	@Override
-	protected Object getObject() {
-		transaccion = new Transaccion();
-		
-		return transaccion;
+	protected Transaccion<Peso> getObject() throws Exception {
+		return new Transaccion<Peso>(new Dinero<Peso>(Moneda.PESO, 100));
 	}
 	
 	@Test

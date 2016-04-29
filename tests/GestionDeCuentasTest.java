@@ -3,17 +3,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class GestionDeCuentasTest extends TrabajoPracticoTest {
+public class GestionDeCuentasTest extends TrabajoPracticoTest<GestionDeCuentas> {
 
-	private GestionDeCuentas cuentas;
-	
-	@Before
-	@Override
-	protected Object getObject() {
-		cuentas = new GestionDeCuentas();
-		
-		return cuentas;
-	}
 	@Test
 	public void puedeAbrirUnaCajaDeAhorro() {
 		fail("Not yet implemented");
@@ -32,5 +23,10 @@ public class GestionDeCuentasTest extends TrabajoPracticoTest {
 	@Test
 	public void puedeHabilitarUnaCuenta() {
 		fail("Not yet implemented");
+	}
+
+	@Override
+	protected GestionDeCuentas getObject() throws Exception {
+		return new GestionDeCuentas();
 	}
 }

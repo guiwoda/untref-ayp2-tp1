@@ -7,12 +7,9 @@ public class VentanillaTest extends TrabajoPracticoTest {
 
 	private Ventanilla ventanilla;
 	
-	@Before
 	@Override
-	protected Object getObject() {
-		ventanilla = new Ventanilla();
-		
-		return ventanilla;
+	public Object getObject() {
+		return new Ventanilla();
 	}
 
 	@Test

@@ -81,13 +81,13 @@ public class CajaDeAhorroTest extends CuentaDeClienteTest<CajaDeAhorro<Moneda>, 
 	}
 
 	public CajaDeAhorro<Moneda> createCuenta(Moneda denominacion) throws Exception {
-		clientes.add(new PersonaFisica());
+		clientes.add(createCliente("20-12332112-3"));
 		return createCuenta(new Dinero<Moneda>(denominacion, SALDO), CBU, clientes, interes);
 	}
 
 	@Override
 	public CajaDeAhorro<Moneda> createCuenta(int CBU) throws Exception {
-		clientes.add(createCliente());
+		clientes.add(createCliente("20-12345678-9"));
 		
 		return createCuenta(saldo, CBU, clientes, interes);
 	}
@@ -112,8 +112,11 @@ public class CajaDeAhorroTest extends CuentaDeClienteTest<CajaDeAhorro<Moneda>, 
 	}
 
 	@Override
-	public PersonaFisica createCliente() throws Exception {
-		return new PersonaFisica();
+	public PersonaFisica createCliente(String cuit) throws Exception {
+		return new PersonaFisica(
+			"Acme Co.", cuit, new Domicilio(), "5555-4444",
+			Documento.dni(32000555), EstadoCivil.SOLTERO, "Programador", "Maria Angélica de los Laureles del Monte Diaz Lacarra"
+		);
 	}
 
 	@Override

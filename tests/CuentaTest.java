@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 @SuppressWarnings("all")
-abstract public class CuentaTest<C extends Cuenta<M>, M extends Moneda> extends TrabajoPracticoTest {
+abstract public class CuentaTest<C extends Cuenta<M>, M extends Moneda> extends TrabajoPracticoTest<C> {
 
 	protected static final int	CBU		= 1337;
 	protected static final int	SALDO	= 10;
@@ -70,7 +70,7 @@ abstract public class CuentaTest<C extends Cuenta<M>, M extends Moneda> extends 
 	}
 
 	@Override
-	public Object getObject() throws Exception {
+	public C getObject() throws Exception {
 		return createCuenta(CBU);
 	}
 }
