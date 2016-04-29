@@ -48,7 +48,7 @@ abstract class Cuenta implements Comparable<Cuenta> {
 		return transacciones;
 	}
 
-	public Moneda getDenominacion() {
+	public Moneda getMoneda() {
 		return saldo.getMoneda();
 	}
 

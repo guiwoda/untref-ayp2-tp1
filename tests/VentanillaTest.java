@@ -30,7 +30,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
 		Dinero saldo = cuenta.getSaldo();
 		
-		CuentaDeCliente<?> result = getObject().depositar(CBU, new Dinero(cuenta.getDenominacion(), 1000));
+		CuentaDeCliente<?> result = getObject().depositar(CBU, new Dinero(cuenta.getMoneda(), 1000));
 		
 		assertEquals(cuenta, result);
 		assertTrue(saldo.compareTo(result.getSaldo()) < 0);
@@ -44,7 +44,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 
 		cuenta.inactivar();
 		
-		getObject().depositar(CBU, new Dinero(cuenta.getDenominacion(), 1000));
+		getObject().depositar(CBU, new Dinero(cuenta.getMoneda(), 1000));
 	}
 
 	@Test(expected=Exception.class)
@@ -54,7 +54,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 
 		Moneda denominacion;
 		
-		if (cuenta.getDenominacion() instanceof Peso) {
+		if (cuenta.getMoneda() instanceof Peso) {
 			denominacion = Moneda.DOLAR;
 		} else {
 			denominacion = Moneda.PESO;
