@@ -1,30 +1,66 @@
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VentanillaTest extends TrabajoPracticoTest {
-
-	private Ventanilla ventanilla;
+public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
+	private Map<Integer, CuentaDeCliente<?>> cuentas;
+	
+	@Before
+	public void setUp() throws Exception {
+		cuentas = new HashMap<>();
+		
+		for (int i = 0; i < 20; i++) {
+			CuentaDeCliente<?> cuenta = CuentasFixture.random();
+			
+			cuentas.put(cuenta.getCBU(), cuenta);
+		}
+	}
 	
 	@Override
-	public Object getObject() {
-		return new Ventanilla();
+	public Ventanilla getObject() {
+		return new Ventanilla(cuentas);
 	}
 
 	@Test
-	public void puedeDepositarDineroDeLaMonedaCorrespondienteEnUnaCuentaHabilitada() {
-		fail("Not yet implemented");
+	public void puedeDepositarDineroDeLaMonedaCorrespondienteEnUnaCuentaHabilitada() throws Exception {
+		int CBU = cuentas.keySet().iterator().next();
+		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
+		Dinero saldo = cuenta.getSaldo();
+		
+		CuentaDeCliente<?> result = getObject().depositar(CBU, new Dinero(cuenta.getDenominacion(), 1000));
+		
+		assertEquals(cuenta, result);
+		assertTrue(saldo.compareTo(result.getSaldo()) < 0);
+		
 	}
 	
-	@Test
-	public void noPuedeDepositarEnCuentasInactivas() {
-		fail("Not yet implemented");
+	@Test(expected=Exception.class)
+	public void noPuedeDepositarEnCuentasInactivas() throws Exception {
+		int CBU = cuentas.keySet().iterator().next();
+		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
+
+		cuenta.inactivar();
+		
+		getObject().depositar(CBU, new Dinero(cuenta.getDenominacion(), 1000));
 	}
 
-	@Test
-	public void noPuedeDepositarDineroDeMonedaDiferenteAComoEstaNominadaLaCuenta() {
-		fail("Not yet implemented");
+	@Test(expected=Exception.class)
+	public void noPuedeDepositarDineroDeMonedaDiferenteAComoEstaNominadaLaCuenta() throws Exception {
+		int CBU = cuentas.keySet().iterator().next();
+		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
+
+		Moneda denominacion;
+		
+		if (cuenta.getDenominacion() instanceof Peso) {
+			denominacion = Moneda.DOLAR;
+		} else {
+			denominacion = Moneda.PESO;
+		}
+		
+		getObject().depositar(CBU, new Dinero(denominacion, 1000));
 	}
 	
 	@Test

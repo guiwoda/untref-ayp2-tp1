@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-abstract public class CuentaDeClienteTest<C extends CuentaDeCliente<M, T>, M extends Moneda, T extends Cliente> extends CuentaTest<C, M> {
+abstract public class CuentaDeClienteTest<C extends CuentaDeCliente<T>, T extends Cliente> extends CuentaTest<C> {
 
 	protected Set<T> clientes;
 	
@@ -35,10 +35,9 @@ abstract public class CuentaDeClienteTest<C extends CuentaDeCliente<M, T>, M ext
 	}
 
 	@Test
-	@SuppressWarnings("all")
 	public void unaCuentaActivaPuedeAcreditarDinero() throws Exception {
-		Dinero<M> saldo = cuenta.getSaldo();
-		Dinero<M> deposito = new Dinero<M>(denominacion, 10);
+		Dinero saldo = cuenta.getSaldo();
+		Dinero deposito = new Dinero(denominacion, 10);
 
 		cuenta.depositar(deposito);
 
@@ -46,37 +45,33 @@ abstract public class CuentaDeClienteTest<C extends CuentaDeCliente<M, T>, M ext
 	}
 
 	@Test
-	@SuppressWarnings("all")
 	public void unaCuentaActivaPuedeDebitarDinero() throws Exception {
-		Dinero<M> saldo = cuenta.getSaldo();
-		Dinero<M> extraccion = new Dinero<M>(denominacion, 6);
+		Dinero saldo = cuenta.getSaldo();
+		Dinero extraccion = new Dinero(denominacion, 6);
 		cuenta.extraer(extraccion);
 
-		assertEquals(saldo.restar(extraccion), cuenta.getSaldo());
+		assertTrue(cuenta.getSaldo().compareTo(saldo) < 0);
 	}
 
 	@Test(expected = Exception.class)
-	@SuppressWarnings("all")
 	public void unaCuentaInactivaNoPuedeAcreditarDinero() throws Exception {
 		cuenta.inactivar();
 
-		cuenta.depositar(new Dinero<M>(denominacion, 10));
+		cuenta.depositar(new Dinero(denominacion, 10));
 	}
 
 	@Test(expected = Exception.class)
-	@SuppressWarnings("all")
 	public void unaCuentaInactivaNoPuedeDebitarDinero() throws Exception {
 		cuenta.inactivar();
 
-		cuenta.extraer(new Dinero<M>(denominacion, 10));
+		cuenta.extraer(new Dinero(denominacion, 10));
 	}
 
 	@Test
-	@SuppressWarnings("all")
 	public void sePuedeTransferirDineroAOtraCuenta() throws Exception {
-		Cuenta<M> otra = createCuenta();
-		Dinero<M> monto = new Dinero<M>(denominacion, 5);
-		Dinero<M> expected = otra.getSaldo();
+		Cuenta otra = createCuenta();
+		Dinero monto = new Dinero(denominacion, 5);
+		Dinero expected = otra.getSaldo();
 
 		cuenta.transferir(otra, monto);
 

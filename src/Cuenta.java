@@ -2,33 +2,35 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-abstract class Cuenta<M extends Moneda> implements Comparable<Cuenta> {
+abstract class Cuenta implements Comparable<Cuenta> {
 
 	protected int				CBU;
-	protected Dinero<M>			saldo;
+	protected Dinero			saldo;
 	protected Set<Transaccion>	transacciones;
 
-	public Cuenta(int CBU, M moneda) throws Exception {
+	public Cuenta(int CBU, Moneda moneda) throws Exception {
 		this.CBU = CBU;
 		this.transacciones = new HashSet<Transaccion>();
-		this.saldo = new Dinero<M>(moneda, 0);
+		this.saldo = new Dinero(moneda, 0);
 	}
 
-	@SuppressWarnings("unchecked")
-	public Dinero<M> depositar(Dinero<M> dinero) throws Exception {
-		transacciones.add(Transaccion.credito(new Date(), (Dinero<Moneda>) dinero, ""));
+	public Dinero depositar(Dinero dinero) throws Exception {
+		if (! dinero.getMoneda().equals(saldo.getMoneda())) {
+			throw new Exception("No se puede depositar en una moneda diferente a la configurada en la cuenta.");
+		}
+		
+		transacciones.add(Transaccion.credito(new Date(), dinero, ""));
 		
 		saldo = calcularSaldo();
 		
 		return saldo;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected Dinero<M> calcularSaldo() throws Exception {
-		Dinero<M> resultado = new Dinero<M>(saldo.getMoneda(), 0);
+	protected Dinero calcularSaldo() throws Exception {
+		Dinero resultado = new Dinero(saldo.getMoneda(), 0);
 		
 		for (Transaccion transaccion : transacciones) {
-			resultado = (Dinero<M>) transaccion.aplicar((Dinero<Moneda>) resultado);
+			resultado = (Dinero) transaccion.aplicar(resultado);
 		}
 		
 		return resultado;
@@ -38,7 +40,7 @@ abstract class Cuenta<M extends Moneda> implements Comparable<Cuenta> {
 		return CBU;
 	}
 
-	public Dinero<M> getSaldo() {
+	public Dinero getSaldo() {
 		return saldo;
 	}
 
@@ -46,7 +48,7 @@ abstract class Cuenta<M extends Moneda> implements Comparable<Cuenta> {
 		return transacciones;
 	}
 
-	public M getDenominacion() {
+	public Moneda getDenominacion() {
 		return saldo.getMoneda();
 	}
 

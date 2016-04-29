@@ -3,40 +3,40 @@ import java.util.Date;
 public class Transaccion implements Comparable<Transaccion> {
 	private final Date				fecha;
 	private final TipoMovimiento	tipo;
-	private final Dinero<Moneda>	monto;
+	private final Dinero	monto;
 	private final String			motivo;
 	private String					observaciones;
 
-	private Transaccion(Date fecha, TipoMovimiento tipo, Dinero<Moneda> monto, String motivo) {
+	private Transaccion(Date fecha, TipoMovimiento tipo, Dinero monto, String motivo) {
 		this.fecha = fecha;
 		this.tipo = tipo;
 		this.monto = monto;
 		this.motivo = motivo;
 	}
 
-	public static Transaccion debito(Date fecha, Dinero<Moneda> monto, String motivo) {
+	public static Transaccion debito(Date fecha, Dinero monto, String motivo) {
 		return new Transaccion(fecha, TipoMovimiento.DEBITO, monto, motivo);
 	}
 
-	public static Transaccion debito(Date fecha, Dinero<Moneda> monto, String motivo, String observaciones) {
+	public static Transaccion debito(Date fecha, Dinero monto, String motivo, String observaciones) {
 		Transaccion result = Transaccion.debito(fecha, monto, motivo);
 		result.observaciones = observaciones;
 
 		return result;
 	}
 
-	public static Transaccion credito(Date fecha, Dinero<Moneda> monto, String motivo) {
+	public static Transaccion credito(Date fecha, Dinero monto, String motivo) {
 		return new Transaccion(fecha, TipoMovimiento.CREDITO, monto, motivo);
 	}
 
-	public static Transaccion credito(Date fecha, Dinero<Moneda> monto, String motivo, String observaciones) {
+	public static Transaccion credito(Date fecha, Dinero monto, String motivo, String observaciones) {
 		Transaccion result = Transaccion.debito(fecha, monto, motivo);
 		result.observaciones = observaciones;
 
 		return result;
 	}
 
-	public Dinero<Moneda> getMonto() {
+	public Dinero getMonto() {
 		return monto;
 	}
 
@@ -56,7 +56,7 @@ public class Transaccion implements Comparable<Transaccion> {
 		return motivo;
 	}
 	
-	public Dinero<Moneda> aplicar(Dinero<Moneda> saldo) throws Exception {
+	public Dinero aplicar(Dinero saldo) throws Exception {
 		return tipo.aplicar(saldo, monto);
 	}
 

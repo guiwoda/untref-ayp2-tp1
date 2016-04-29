@@ -1,11 +1,11 @@
 import java.math.BigDecimal;
 
-public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
+public class Dinero implements Comparable<Dinero> {
 	private static final int	FACTOR_DECIMAL	= 100;
-	private T					moneda;
+	private Moneda				moneda;
 	private int					centavos;
 
-	public Dinero(T moneda) throws Exception {
+	public Dinero(Moneda moneda) throws Exception {
 		if (moneda == null) {
 			throw new Exception("El dinero necesita ser de una moneda específica.");
 		}
@@ -13,44 +13,52 @@ public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
 		this.moneda = moneda;
 	}
 
-	public Dinero(T moneda, int monto) throws Exception {
+	public Dinero(Moneda moneda, int monto) throws Exception {
 		this(moneda);
 
 		this.centavos = monto * FACTOR_DECIMAL;
 	}
 
-	public Dinero(T moneda, float monto) throws Exception {
+	public Dinero(Moneda moneda, float monto) throws Exception {
 		this(moneda);
 
 		this.centavos = Math.round(monto * FACTOR_DECIMAL);
 	}
 
-	public Dinero<T> sumar(Dinero<T> dinero) throws Exception {
+	public Dinero sumar(Dinero dinero) throws Exception {
+		if (!moneda.equals(dinero.moneda)) {
+			throw new Exception("No se puede sumar dinero de diferentes monedas.");
+		}
+		
 		return crearConCentavos(centavos + dinero.centavos);
 	}
 
-	public Dinero<T> restar(Dinero<T> dinero) throws Exception {
+	public Dinero restar(Dinero dinero) throws Exception {
+		if (!moneda.equals(dinero.moneda)) {
+			throw new Exception("No se puede restar dinero de diferentes monedas.");
+		}
+		
 		return crearConCentavos(centavos - dinero.centavos);
 	}
 
-	public Dinero<T> sumar(int monto) throws Exception {
+	public Dinero sumar(int monto) throws Exception {
 		return crearConCentavos(this.centavos + monto * FACTOR_DECIMAL);
 	}
 
-	public Dinero<T> restar(int monto) throws Exception {
+	public Dinero restar(int monto) throws Exception {
 		return crearConCentavos(this.centavos - monto * FACTOR_DECIMAL);
 	}
 
-	public Dinero<T> sumar(float monto) throws Exception {
-		return new Dinero<T>(moneda, monto).sumar(this.centavos);
+	public Dinero sumar(float monto) throws Exception {
+		return new Dinero(moneda, monto).sumar(this.centavos);
 	}
 
-	public Dinero<T> restar(float monto) throws Exception {
-		return new Dinero<T>(moneda, -monto).sumar(this.centavos);
+	public Dinero restar(float monto) throws Exception {
+		return new Dinero(moneda, -monto).sumar(this.centavos);
 	}
 
-	public Dinero<T> invertir() throws Exception {
-		return new Dinero<T>(moneda, 0).restar(this);
+	public Dinero invertir() throws Exception {
+		return new Dinero(moneda, 0).restar(this);
 	}
 
 	public boolean isNegativo() {
@@ -61,7 +69,7 @@ public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
 		return !isNegativo();
 	}
 
-	public T getMoneda() {
+	public Moneda getMoneda() {
 		return moneda;
 	}
 
@@ -69,13 +77,13 @@ public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
 		return centavos;
 	}
 
-	public Dinero<T>[] distribuir(int[] partes) throws Exception {
+	public Dinero[] distribuir(int[] partes) throws Exception {
 		long total = 0;
 		for (int parte : partes) {
 			total += parte;
 		}
 
-		Dinero<T>[] resultado = new Dinero[partes.length];
+		Dinero[] resultado = new Dinero[partes.length];
 
 		// distribuyo truncando decimales (fracciones de centavos)
 		long resto = centavos;
@@ -92,15 +100,15 @@ public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
 		return resultado;
 	}
 
-	private Dinero<T> crearConCentavos(long centavos) throws Exception {
-		Dinero<T> dinero = new Dinero<T>(moneda);
+	private Dinero crearConCentavos(long centavos) throws Exception {
+		Dinero dinero = new Dinero(moneda);
 		dinero.centavos = (int) centavos;
 
 		return dinero;
 	}
 
 	@Override
-	public int compareTo(Dinero<T> other) {
+	public int compareTo(Dinero other) {
 		if (centavos > other.centavos) {
 			return 1;
 		}
@@ -134,6 +142,8 @@ public class Dinero<T extends Moneda> implements Comparable<Dinero<T>> {
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append(moneda.getSimbolo()).append(" ").append(BigDecimal.valueOf(centavos, 2)).toString();
+		return new StringBuilder()
+			.append(moneda.getSimbolo()).append(" ").append(BigDecimal.valueOf(centavos, 2))
+			.toString();
 	}
 }

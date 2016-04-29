@@ -1,15 +1,14 @@
 import java.util.Set;
 
-public class CajaDeAhorro<M extends Moneda> extends CuentaDeCliente<M, PersonaFisica> {
+public class CajaDeAhorro extends CuentaDeCliente<PersonaFisica> {
 
-	private final Dinero<M> interes;
+	private final Dinero interes;
 
-	@SuppressWarnings("unchecked")
-	public CajaDeAhorro(int CBU, Dinero<M> deposito, Set<PersonaFisica> titulares, Dinero<M> interes) throws Exception {
+	public CajaDeAhorro(int CBU, Dinero deposito, Set<PersonaFisica> titulares, Dinero interes) throws Exception {
 		super(
 			CBU, 
 			deposito, 
-			(Dinero<M>) deposito.getMoneda().getMantenimientoCajaDeAhorro(),
+			(Dinero) deposito.getMoneda().getMantenimientoCajaDeAhorro(),
 			titulares
 		);
 		
@@ -29,8 +28,8 @@ public class CajaDeAhorro<M extends Moneda> extends CuentaDeCliente<M, PersonaFi
 	}
 
 	@Override
-	public Dinero<M> extraer(Dinero<M> dinero) throws Exception {
-		Dinero<M> resultado = saldo.restar(dinero);
+	public Dinero extraer(Dinero dinero) throws Exception {
+		Dinero resultado = saldo.restar(dinero);
 
 		if (resultado.isNegativo()) {
 			throw new Exception("Las cajas de ahorro no pueden tener saldo negativo.");
@@ -39,11 +38,11 @@ public class CajaDeAhorro<M extends Moneda> extends CuentaDeCliente<M, PersonaFi
 		return super.extraer(dinero);
 	}
 
-	public Dinero<M> getCostoDeMantenimiento() {
+	public Dinero getCostoDeMantenimiento() {
 		return mantenimiento;
 	}
 
-	public Dinero<M> getInteres() {
+	public Dinero getInteres() {
 		return interes;
 	}
 }

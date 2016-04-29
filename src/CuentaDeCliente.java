@@ -1,13 +1,13 @@
 import java.util.Date;
 import java.util.Set;
 
-public class CuentaDeCliente<M extends Moneda, C extends Cliente> extends Cuenta<M> {
+public class CuentaDeCliente<C extends Cliente> extends Cuenta {
 
 	protected boolean			activa	= true;
-	protected final Dinero<M>	mantenimiento;
+	protected final Dinero	mantenimiento;
 	protected final Set<C>		titulares;
 
-	public CuentaDeCliente(int CBU, Dinero<M> deposito, Dinero<M> mantenimiento, Set<C> titulares) throws Exception {
+	public CuentaDeCliente(int CBU, Dinero deposito, Dinero mantenimiento, Set<C> titulares) throws Exception {
 		super(CBU, deposito.getMoneda());
 
 		if (deposito.isNegativo()) {
@@ -25,7 +25,7 @@ public class CuentaDeCliente<M extends Moneda, C extends Cliente> extends Cuenta
 	}
 	
 	@Override
-	public Dinero<M> depositar(Dinero<M> dinero) throws Exception {
+	public Dinero depositar(Dinero dinero) throws Exception {
 		if (!activa) {
 			throw new Exception("Una cuenta inactiva no puede acreditar dinero.");
 		}
@@ -33,13 +33,12 @@ public class CuentaDeCliente<M extends Moneda, C extends Cliente> extends Cuenta
 		return super.depositar(dinero);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Dinero<M> extraer(Dinero<M> dinero) throws Exception {
+	public Dinero extraer(Dinero dinero) throws Exception {
 		if (!activa) {
 			throw new Exception("Una cuenta inactiva no puede extraer dinero.");
 		}
 		
-		transacciones.add(Transaccion.debito(new Date(), (Dinero<Moneda>) dinero, ""));
+		transacciones.add(Transaccion.debito(new Date(), (Dinero) dinero, ""));
 		
 		saldo = calcularSaldo();
 
@@ -50,7 +49,7 @@ public class CuentaDeCliente<M extends Moneda, C extends Cliente> extends Cuenta
 		activa = false;
 	}
 	
-	public Dinero<M> getCostoDeMantenimiento() {
+	public Dinero getCostoDeMantenimiento() {
 		return mantenimiento;
 	}
 	
@@ -58,7 +57,7 @@ public class CuentaDeCliente<M extends Moneda, C extends Cliente> extends Cuenta
 		return titulares;
 	}
 	
-	public void transferir(Cuenta<M> otra, Dinero<M> monto) throws Exception {
+	public void transferir(Cuenta otra, Dinero monto) throws Exception {
 		extraer(monto);
 		otra.depositar(monto);
 	}

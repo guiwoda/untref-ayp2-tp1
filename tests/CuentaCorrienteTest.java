@@ -3,13 +3,10 @@ import static org.junit.Assert.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.hamcrest.core.IsInstanceOf;
-import org.junit.Before;
 import org.junit.Test;
 
-public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Peso, Cliente> {
-	private Dinero<Peso> sobregiro;
+public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Cliente> {
+	private Dinero sobregiro;
 	
 	@Test
 	public void tieneUnAcuerdoDeSobregiroPactadoAlAbrir() throws Exception {
@@ -29,17 +26,17 @@ public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Pe
 		cuenta.extraer(cuenta.getSaldo().sumar(sobregiro).sumar(100));
 	}
 
-	@Test
+	@Test(expected=Exception.class)
 	public void soloPuedeEstarNominadaEnPesos() throws Exception {
-		assertThat(cuenta.getDenominacion(), new IsInstanceOf(Peso.class));
+		new CuentaCorriente(CBU, new Dinero(Moneda.DOLAR, 10), clientes, sobregiro);
 	}
 
 	@Test
 	public void seCobraUnaComisionPorDepositoQueDebeSerDepositadaEnUnaCuentaEspecial() throws Exception {
 		int porcentajeComision = Banco.instance().getPorcentajeComision();
 		
-		Dinero<Peso> monto = new Dinero<Peso>(Moneda.PESO, 40000);
-		Dinero<Peso> expected = cuenta.getSaldo().sumar(40000 - 400 * porcentajeComision);
+		Dinero monto = new Dinero(Moneda.PESO, 40000);
+		Dinero expected = cuenta.getSaldo().sumar(40000 - 400 * porcentajeComision);
 		
 		assertEquals(expected, cuenta.depositar(monto));
 	}
@@ -47,16 +44,31 @@ public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Pe
 	@Test
 	public void seCobraUnaComisionPorExtraccionQueDebeSerDepositadaEnUnaCuentaEspecial() throws Exception {
 		int porcentajeComision = Banco.instance().getPorcentajeComision();
+		
+		Dinero monto = new Dinero(Moneda.PESO, 400);
+		Dinero expected = cuenta.getSaldo().restar(400 + 4 * porcentajeComision);
+		
+		assertEquals(expected, cuenta.extraer(monto));
 	}
 	
 	@Test
 	public void seCobraUnaComisionPorTransferenciaQueDebeSerDepositadaEnUnaCuentaEspecial() throws Exception {
 		int porcentajeComision = Banco.instance().getPorcentajeComision();
+		
+		Dinero monto = new Dinero(Moneda.PESO, 400);
+		Dinero resultadoDebito = cuenta.getSaldo().restar(400 + 4 * porcentajeComision);
+		CuentaCorriente otra = createCuenta(1234);
+		Dinero resultadoCredito = otra.getSaldo().sumar(400 - 4 * porcentajeComision);
+		
+		cuenta.transferir(otra, monto);
+		
+		assertEquals(resultadoDebito, cuenta.getSaldo());
+		assertEquals(resultadoCredito, otra.getSaldo());
 	}
 
 	@Test
 	public void noTieneCostoDeMantenimiento() throws Exception {
-		assertEquals(new Dinero<Peso>(denominacion, 0), cuenta.getCostoDeMantenimiento());
+		assertEquals(new Dinero(denominacion, 0), cuenta.getCostoDeMantenimiento());
 	}
 
 	@Override
@@ -68,16 +80,16 @@ public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Pe
 	public CuentaCorriente createCuenta(int CBU) throws Exception {
 		clientes.add(createCliente("20-23455432-1"));
 		
-		return createCuenta(CBU, new Dinero<Peso>(denominacion, 10), clientes, sobregiro);
+		return createCuenta(CBU, new Dinero(denominacion, 10), clientes, sobregiro);
 	}
 
-	public CuentaCorriente createCuenta(int CBU, Dinero<Peso> saldo, Set<Cliente> clientes, Dinero<Peso> sobregiro) throws Exception {
+	public CuentaCorriente createCuenta(int CBU, Dinero saldo, Set<Cliente> clientes, Dinero sobregiro) throws Exception {
 		return new CuentaCorriente(CBU, saldo, clientes, sobregiro);
 	}
 
 	@Override
 	public CuentaCorriente createCuenta(Set<Cliente> clientes) throws Exception {
-		return createCuenta(CBU, new Dinero<Peso>(Moneda.PESO, 10), clientes, sobregiro);
+		return createCuenta(CBU, new Dinero(Moneda.PESO, 10), clientes, sobregiro);
 	}
 
 	@Override
@@ -97,7 +109,7 @@ public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Pe
 	
 	@Override
 	public void setUp() throws Exception {
-		sobregiro = new Dinero<Peso>(Moneda.PESO, 500);
+		sobregiro = new Dinero(Moneda.PESO, 500);
 		
 		super.setUp();
 	}

@@ -8,9 +8,9 @@ public class Peso implements Moneda {
 	}
 	
 	@Override
-	public Dinero<Moneda> getMantenimientoCajaDeAhorro() {
+	public Dinero getMantenimientoCajaDeAhorro() {
 		try {
-			return new Dinero<Moneda>(Moneda.PESO, MANTENIMIENTO_CAJA_DE_AHORRO);
+			return new Dinero(this, MANTENIMIENTO_CAJA_DE_AHORRO);
 		} catch (Exception e) {
 			throw new Error();
 		}

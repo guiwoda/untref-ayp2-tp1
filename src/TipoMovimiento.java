@@ -4,7 +4,7 @@ public abstract class TipoMovimiento {
 	
 	private final String tipo;
 	
-	abstract public Dinero<Moneda> aplicar(Dinero<Moneda> saldo, Dinero<Moneda> monto) throws Exception;
+	abstract public Dinero aplicar(Dinero saldo, Dinero monto) throws Exception;
 	
 	protected TipoMovimiento(String tipo){
 		this.tipo = tipo;
@@ -34,7 +34,7 @@ public abstract class TipoMovimiento {
 			super("Crédito");
 		}
 		
-		public Dinero<Moneda> aplicar(Dinero<Moneda> saldo, Dinero<Moneda> monto) throws Exception {
+		public Dinero aplicar(Dinero saldo, Dinero monto) throws Exception {
 			return saldo.sumar(monto);
 		}
 	}
@@ -44,7 +44,7 @@ public abstract class TipoMovimiento {
 			super("Débito");
 		}
 		
-		public Dinero<Moneda> aplicar(Dinero<Moneda> saldo, Dinero<Moneda> monto) throws Exception {
+		public Dinero aplicar(Dinero saldo, Dinero monto) throws Exception {
 			return saldo.restar(monto);
 		}
 	}
