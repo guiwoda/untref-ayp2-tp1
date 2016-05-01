@@ -172,7 +172,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 	
 	@Test
 	public void debeConvertirLaMonedaAlTipoDeDestinoUsandoElCambioVigente() throws Exception {
-		fail("Not yet implemented");
+		
 	}
 	
 	@Test
