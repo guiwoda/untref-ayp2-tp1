@@ -28,6 +28,22 @@ public class DineroTest extends TrabajoPracticoTest<Dinero> {
 
 		assertEquals(dinero, resultado[0].sumar(resultado[1]));
 	}
+	
+	@Test
+	public void puedeDividirse() throws Exception {
+		Dinero dinero = new Dinero(new Peso(), 100);
+		Dinero result = dinero.dividir(2);
+		
+		assertEquals(5000, result.getCentavos());
+	}
+	
+	@Test
+	public void puedeMultiplicarse() throws Exception {
+		Dinero dinero = new Dinero(new Peso(), 50);
+		Dinero result = dinero.multiplicar(2);
+		
+		assertEquals(10000, result.getCentavos());
+	}
 
 	@Override
 	protected Dinero getObject() throws Exception {

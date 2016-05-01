@@ -56,6 +56,14 @@ public class Dinero implements Comparable<Dinero> {
 	public Dinero restar(float monto) throws Exception {
 		return new Dinero(moneda, -monto).sumar(this.centavos);
 	}
+	
+	public Dinero dividir(double dividendo) throws Exception {
+		return crearConCentavos(Math.round(centavos / dividendo));
+	}
+	
+	public Dinero multiplicar(double factor) throws Exception {
+		return crearConCentavos((long) Math.round(centavos * factor));
+	}
 
 	public Dinero invertir() throws Exception {
 		return new Dinero(moneda, 0).restar(this);
