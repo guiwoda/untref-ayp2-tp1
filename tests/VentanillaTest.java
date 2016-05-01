@@ -76,10 +76,9 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
 		Dinero saldo = cuenta.getSaldo();
 
-		CajaDeAhorro result = getObject().extraer(CBU, new Dinero(cuenta.getMoneda(), 10));
+		getObject().extraer(CBU, new Dinero(cuenta.getMoneda(), 10));
 		
-		assertEquals(cuenta, result);
-		assertTrue(result.getSaldo().compareTo(saldo) < 0);
+		assertTrue(cuenta.getSaldo().compareTo(saldo) < 0);
 	}
 	
 	@Test(expected=Exception.class)
