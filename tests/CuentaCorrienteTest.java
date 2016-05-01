@@ -99,7 +99,7 @@ public class CuentaCorrienteTest extends CuentaDeClienteTest<CuentaCorriente, Cl
 
 	@Override
 	public Cliente createCliente(String cuit) throws Exception {
-		return new PersonaJuridica("Acme Co.", cuit, new Domicilio(), "5555-4444", new Date(1445385600));
+		return new PersonaJuridica("Acme Co.", cuit, new Domicilio("La julia 338", 8877, "Saenz Peña", "Buenos Aires"), "5555-4444", new Date(1445385600));
 	}
 
 	@Override

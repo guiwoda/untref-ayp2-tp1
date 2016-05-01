@@ -101,7 +101,7 @@ public class CajaDeAhorroTest extends CuentaDeClienteTest<CajaDeAhorro, PersonaF
 
 	@Override
 	public PersonaFisica createCliente(String cuit) throws Exception {
-		return new PersonaFisica("Acme Co.", cuit, new Domicilio(), "5555-4444", Documento.dni(32000555), EstadoCivil.SOLTERO, "Programador", "Maria Angélica de los Laureles del Monte Diaz Lacarra");
+		return new PersonaFisica("Acme Co.", cuit, new Domicilio("La julia 338", 8877, "Saenz Peña", "Buenos Aires"), "5555-4444", Documento.dni(32000555), EstadoCivil.SOLTERO, "Programador", "Maria Angélica de los Laureles del Monte Diaz Lacarra");
 	}
 
 	@Override

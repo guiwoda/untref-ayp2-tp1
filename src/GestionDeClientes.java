@@ -1,7 +1,10 @@
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class GestionDeClientes {
-
-	public void darDeAlta (Cliente cliente){
+	Map<String, Cliente> clientes = new HashMap<>();
+	public void darDeAlta (String razonSocial, String cuit, Domicilio domicilio, String telefono){
 		
 	}
 	public void darDeBaja (Cliente cliente){

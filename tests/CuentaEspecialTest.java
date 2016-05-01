@@ -10,7 +10,7 @@ public class CuentaEspecialTest extends CuentaTest<CuentaEspecial> {
 	@Test
 	public void puedenCobrarComisionesACuentasDeClientes() throws Exception {
 		Set<Cliente> clientes = new HashSet<Cliente>();
-		clientes.add(new PersonaJuridica("Acme Co.", "20-12345678-9", new Domicilio(), "5555-4444", new Date(1445385600)));
+		clientes.add(new PersonaJuridica("Acme Co.", "20-12345678-9", new Domicilio("La julia 338", 8877, "Saenz Peña", "Buenos Aires"), "5555-4444", new Date(1445385600)));
 		
 		CuentaCorriente cuentaDeCliente = new CuentaCorriente(123, new Dinero(Moneda.PESO, 10), clientes, new Dinero(Moneda.PESO, 1000));
 		

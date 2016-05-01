@@ -8,7 +8,7 @@ class ClientesFixture {
 		return new PersonaFisica(
 			"ACME Co.",
 			"20-12345678-9",
-			new Domicilio(),
+			new Domicilio("La julia 338", 8877, "Saenz Peña", "Buenos Aires"),
 			"5555-4444",
 			Documento.dni((int) (Math.random() * 100000000)),
 			EstadoCivil.SOLTERO,
@@ -21,7 +21,7 @@ class ClientesFixture {
 		return new PersonaJuridica(
 			"ACME Co.",
 			"20-12345678-9",
-			new Domicilio(),
+			new Domicilio("La julia 338", 8877, "Saenz Peña", "Buenos Aires"),
 			"5555-4444",
 			new Date(1445385600 + ((int) Math.random() * 100))
 		);

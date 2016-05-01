@@ -65,7 +65,7 @@ abstract public class ClienteTest<C extends Cliente> extends TrabajoPracticoTest
 	public void setUp() throws Exception {
 		razonSocial = "ACME Co.";
 		cuit = "20-12345678-9";
-		domicilio = new Domicilio();
+		domicilio = new Domicilio("San Martin 7884", 9328, "Monte Coman", "Mendoza");
 		telefono = "5555-4444";
 		
 		cliente = getCliente();
