@@ -154,4 +154,11 @@ public class Dinero implements Comparable<Dinero> {
 			.append(moneda.getSimbolo()).append(" ").append(BigDecimal.valueOf(centavos, 2))
 			.toString();
 	}
+
+	public Dinero convertir(Moneda moneda, double factor) throws Exception {
+		Dinero resultado = multiplicar(factor);
+		resultado.moneda = moneda;
+		
+		return resultado;
+	}
 }
