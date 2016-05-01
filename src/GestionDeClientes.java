@@ -1,26 +1,43 @@
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class GestionDeClientes {
 	Map<String, Cliente> clientes = new HashMap<>();
-	public void darDeAlta (String razonSocial, String cuit, Domicilio domicilio, String telefono){
-		
+	Map<Documento, PersonaFisica> personasFisicas = new HashMap<>();
+	Map<String, PersonaJuridica> personasJuridicas = new HashMap<>();
+	public PersonaFisica darDeAltaPersonaFisica (String nombre, String cuit, Domicilio domicilio, String telefono,Documento documento, EstadoCivil estadoCivil, String profesion, String conyuge){
+		PersonaFisica cliente = new PersonaFisica(nombre, cuit, domicilio, telefono, documento, estadoCivil, profesion, conyuge);
+		clientes.put(cuit, cliente);
+		personasFisicas.put(documento, cliente);
+		return cliente;
 	}
-	public void darDeBaja (Cliente cliente){
-		
+	public void darDeAltaPersonaJuridica (String razonSocial, String cuit, Domicilio domicilio, String telefono){
+		Date today = new Date();
+		PersonaJuridica cliente = new PersonaJuridica(razonSocial, cuit, domicilio, telefono,today );
+		clientes.put(cuit, cliente);
+		personasJuridicas.put(razonSocial, cliente);
 	}
-	public void buscarClientesPorCuit(String cuit){
-		
+	public void darDeBaja (String cuit){
+		Cliente cliente = clientes.get(cuit);
+		cliente.desactivar();
 	}
-	public void buscarClientesPorRazonSocial(String razonSocial){
-		
+	public Cliente buscarClientesPorCuit(String cuit){
+		Cliente cliente = clientes.get(cuit);
+		return cliente;
 	}
-	public void buscarClientesPorNumeroDeDocumento(Documento documento){
-		
+	public PersonaJuridica buscarClientesPorRazonSocial(String razonSocial){
+		PersonaJuridica cliente = personasJuridicas.get(razonSocial);
+		return cliente;
 	}
-	public void reactuvarCliente(Cliente cliente){
-		
+	public PersonaFisica buscarClientesPorNumeroDeDocumento(Documento documento){
+		PersonaFisica cliente = personasFisicas.get(documento);
+		return cliente;
+	}
+	public void reactivarCliente(String cuit){
+		Cliente client = clientes.get(cuit);
+		client.reactivar();
 	}
 	
 }
