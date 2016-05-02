@@ -6,11 +6,15 @@ import org.junit.Test;
 public class GestionDeClientesTest extends TrabajoPracticoTest<GestionDeClientes> {
 	Cliente cliente;
 	Domicilio casa;
+	PersonaFisica persona;
+	PersonaJuridica empresa;
 	@Before
 	
 	public void setUp() throws Exception{
 		casa = new Domicilio("La julia 338", 8877, "Saenz Peña", "Buenos Aires");
 		cliente = getObject().darDeAltaPersonaFisica("Ivan", "8-97928549-40", casa, "4840-8843", Documento.dni(49398370), EstadoCivil.SOLTERO, "Desempleado", "Familia");
+		persona = getObject().darDeAltaPersonaFisica("Ivan", "8-97923459-40", casa, "4840-8843", Documento.dni(49398370), EstadoCivil.SOLTERO, "Desempleado", "Familia");
+		empresa = getObject().darDeAltaPersonaJuridica("Patagonica", "20-3194850-90", casa, "4848-8839" );
 	}
 	@Override
 	protected GestionDeClientes getObject() {
@@ -31,30 +35,41 @@ public class GestionDeClientesTest extends TrabajoPracticoTest<GestionDeClientes
 	@Test
 	public void puedeDarDeBajaClientesSinCuentasAsociadas() throws Exception{
 		getObject().darDeAltaPersonaFisica("Ivan", "8-97928549-40", casa, "4840-8843", Documento.dni(49398370), EstadoCivil.SOLTERO, "Desempleado", "Familia");
+		
 	}
 	
 	@Test(expected = Exception.class)
-	public void noPuedeDarDeBajaClientesConCuentasAsociadas() {
-		CuentasFixture.cajaDeAhorroPesos(cliente);
-		cliente.desactivar();
+	public void noPuedeDarDeBajaClientesConCuentasAsociadas() throws Exception {
+		CuentasFixture.cajaDeAhorroPesos ((PersonaFisica) cliente);
+		getObject().darDeBaja("8-97928549-40");
 	}
 	
 	@Test
 	public void puedeBuscarClientesPorCUIT() {
-		fail("Not yet implemented");
+		Cliente otro;
+		otro = getObject().buscarClientesPorCuit("8-97928549-40");
+		assertEquals(cliente, otro);
 	}
 	@Test
 	public void puedeBuscarClientesPorRazonSocial() {
-		fail("Not yet implemented");
+		PersonaJuridica otro;
+		otro = getObject().buscarClientesPorRazonSocial("Patagonica");
+		assertEquals(empresa, otro);
 	}
 	
 	@Test
-	public void puedeBuscarClientesPorNumeroDeDocumento() {
-		fail("Not yet implemented");
-	}
+	public void puedeBuscarClientesPorNumeroDeDocumento() throws Exception{
+		PersonaFisica otro;
+		otro = getObject().buscarClientesPorNumeroDeDocumento(Documento.dni(49398370));
+		assertEquals(persona, otro);
+		
+	}	
+	
 	
 	@Test
 	public void puedeReactivarUnClienteQueEsteDadoDeBaja() {
-		fail("Not yet implemented");
+		cliente.desactivar();
+		cliente.reactivar();
+		assertEquals(true, cliente.isActivo());
 	}
 }

@@ -4,13 +4,9 @@ import java.util.Map;
 
 
 public class GestionDeClientes {
-	Map<String, Cliente> clientes;
+	Map<String, Cliente> clientes = new HashMap<>();
 	Map<Documento, PersonaFisica> personasFisicas = new HashMap<>();
 	Map<String, PersonaJuridica> personasJuridicas = new HashMap<>();
-	
-	public GestionDeClientes(Map<String, Cliente> clientes){
-		this.clientes = clientes;
-	}
 	
 	public PersonaFisica darDeAltaPersonaFisica (String nombre, String cuit, Domicilio domicilio, String telefono,Documento documento, EstadoCivil estadoCivil, String profesion, String conyuge) throws Exception{
 		if (clientes.containsKey(cuit)){
@@ -21,11 +17,15 @@ public class GestionDeClientes {
 		personasFisicas.put(documento, cliente);
 		return cliente;
 	}
-	public void darDeAltaPersonaJuridica (String razonSocial, String cuit, Domicilio domicilio, String telefono){
+	public PersonaJuridica darDeAltaPersonaJuridica (String razonSocial, String cuit, Domicilio domicilio, String telefono)throws Exception{
+		if (clientes.containsKey(cuit)){
+			throw new Exception ("ya existe");
+		}
 		Date today = new Date();
 		PersonaJuridica cliente = new PersonaJuridica(razonSocial, cuit, domicilio, telefono,today );
 		clientes.put(cuit, cliente);
 		personasJuridicas.put(razonSocial, cliente);
+		return cliente;
 	}
 	public void darDeBaja (String cuit) throws Exception{
 		Cliente cliente = clientes.get(cuit);
