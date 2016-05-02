@@ -18,7 +18,7 @@ public class Ventanilla {
 		return cuenta;
 	}
 
-	public CajaDeAhorro extraer(int CBU, Dinero monto) throws Exception {
+	public void extraer(int CBU, Dinero monto) throws Exception {
 		CuentaDeCliente<?> cuenta = get(CBU);
 		
 		if (! (cuenta instanceof CajaDeAhorro)) {
@@ -26,8 +26,6 @@ public class Ventanilla {
 		}
 		
 		cuenta.extraer(monto);
-		
-		return (CajaDeAhorro) cuenta;
 	}
 	
 	public void transferir(int origen, int destino, Dinero monto) throws Exception {

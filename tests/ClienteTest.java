@@ -43,13 +43,32 @@ abstract public class ClienteTest<C extends Cliente> extends TrabajoPracticoTest
 		assertEquals(telefono, cliente.getTelefono());
 	}
 	
+	@Test
+	public void elClienteEmpiezaActivo(){
+		assertEquals(true, cliente.isActivo());
+	}
+	
+	@Test
+	public void elClienteSeDesactiva(){
+		cliente.desactivar();
+		assertEquals(false, cliente.isActivo());
+	}
+	
+	@Test
+	public void elClienteSeReactiva(){
+		cliente.desactivar();
+		cliente.reactivar();
+		assertEquals(true, cliente.isActivo());
+	}
+	
 	@Before
 	public void setUp() throws Exception {
 		razonSocial = "ACME Co.";
 		cuit = "20-12345678-9";
-		domicilio = new Domicilio();
+		domicilio = new Domicilio("San Martin 7884", 9328, "Monte Coman", "Mendoza");
 		telefono = "5555-4444";
 		
 		cliente = getCliente();
 	}
+	
 }

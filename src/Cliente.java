@@ -3,12 +3,14 @@ abstract class Cliente implements Comparable<Cliente> {
 	protected final String		cuit;
 	protected final Domicilio	domicilio;
 	protected final String		telefono;
+	protected boolean activo;
 
 	public Cliente(String razonSocial, String cuit, Domicilio domicilio, String telefono) {
 		this.razonSocial = razonSocial;
 		this.cuit = cuit;
 		this.domicilio = domicilio;
 		this.telefono = telefono;
+		activo = true;
 
 	}
 
@@ -63,5 +65,14 @@ abstract class Cliente implements Comparable<Cliente> {
 			.append("Telefono: ").append(telefono)
 			.append("\n")
 			.toString();
+	}
+	public void desactivar(){
+		activo = false;
+	}
+	public void reactivar(){
+		activo = true;
+	}
+	public boolean isActivo(){
+		return activo;
 	}
 }

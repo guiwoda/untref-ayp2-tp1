@@ -11,8 +11,10 @@ public class GestionDeClientesTest extends TrabajoPracticoTest<GestionDeClientes
 	}
 	
 	@Test
-	public void puedeDarDeAltaClientesNuevos() {
-		fail("Not yet implemented");
+	public void puedeDarDeAltaClientesNuevos() throws Exception{
+		Domicilio casa = new Domicilio("La julia 338", 8877, "Saenz Peña", "Buenos Aires");
+		Cliente cliente = getObject().darDeAltaPersonaFisica("Ivan", "8-97928549-40", casa, "4840-8843", Documento.dni(49398370), EstadoCivil.SOLTERO, "Desempleado", "Familia");
+		assertEquals(true, cliente.isActivo());
 	}
 	
 	@Test
@@ -34,7 +36,6 @@ public class GestionDeClientesTest extends TrabajoPracticoTest<GestionDeClientes
 	public void puedeBuscarClientesPorCUIT() {
 		fail("Not yet implemented");
 	}
-	
 	@Test
 	public void puedeBuscarClientesPorRazonSocial() {
 		fail("Not yet implemented");
