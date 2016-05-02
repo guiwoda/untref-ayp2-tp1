@@ -3,7 +3,7 @@ import java.util.Date;
 public class Transaccion implements Comparable<Transaccion> {
 	private final Date				fecha;
 	private final TipoMovimiento	tipo;
-	private final Dinero	monto;
+	private final Dinero			monto;
 	private final String			motivo;
 	private String					observaciones;
 
@@ -30,7 +30,7 @@ public class Transaccion implements Comparable<Transaccion> {
 	}
 
 	public static Transaccion credito(Date fecha, Dinero monto, String motivo, String observaciones) {
-		Transaccion result = Transaccion.debito(fecha, monto, motivo);
+		Transaccion result = Transaccion.credito(fecha, monto, motivo);
 		result.observaciones = observaciones;
 
 		return result;
@@ -55,7 +55,7 @@ public class Transaccion implements Comparable<Transaccion> {
 	public String getMotivo() {
 		return motivo;
 	}
-	
+
 	public Dinero aplicar(Dinero saldo) throws Exception {
 		return tipo.aplicar(saldo, monto);
 	}

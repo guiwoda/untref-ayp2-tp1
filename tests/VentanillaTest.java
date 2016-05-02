@@ -5,25 +5,34 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
+import org.hamcrest.core.StringContains;
 import org.junit.Before;
 import org.junit.Test;
 
 public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 	private Map<Integer, CuentaDeCliente<?>> cuentas;
 	
+	private int cbuCajaDeAhorroPesos;
+	private int cbuCajaDeAhorroDolares;
+	private int cbuCuentaCorriente;
+	
 	@Before
 	public void setUp() throws Exception {
 		cuentas = new HashMap<>();
 		
-		for (int i = 0; i < 20; i++) {
-			CuentaDeCliente<?> cuenta = CuentasFixture.random();
-			
-			cuentas.put(cuenta.getCBU(), cuenta);
-		}
+		CajaDeAhorro cajaDeAhorroPesos = CuentasFixture.cajaDeAhorroPesos();
+		CajaDeAhorro cajaDeAhorroDolares = CuentasFixture.cajaDeAhorroDolares();
+		CuentaCorriente cuentaCorriente = CuentasFixture.cuentaCorriente();
 		
-		cuentas.put(1, CuentasFixture.cajaDeAhorroPesos());
-		cuentas.put(2, CuentasFixture.cuentaCorriente());
+		cbuCajaDeAhorroPesos = cajaDeAhorroPesos.getCBU();
+		cbuCajaDeAhorroDolares = cajaDeAhorroDolares.getCBU();
+		cbuCuentaCorriente = cuentaCorriente.getCBU();
+		
+		cuentas.put(cbuCajaDeAhorroPesos, cajaDeAhorroPesos);
+		cuentas.put(cbuCajaDeAhorroDolares, cajaDeAhorroDolares);
+		cuentas.put(cbuCuentaCorriente, cuentaCorriente);
 	}
 	
 	@Override
@@ -33,31 +42,28 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 
 	@Test
 	public void puedeDepositarDineroDeLaMonedaCorrespondienteEnUnaCuentaHabilitada() throws Exception {
-		int CBU = cuentas.keySet().iterator().next();
-		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
+		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 		Dinero saldo = cuenta.getSaldo();
 		
-		CuentaDeCliente<?> result = getObject().depositar(CBU, new Dinero(cuenta.getMoneda(), 1000));
+		getObject().depositar(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1000));
 		
-		assertEquals(cuenta, result);
-		assertTrue(saldo.compareTo(result.getSaldo()) < 0);
+		assertEquals(saldo.toString() + " dice ser mayor que " + cuenta.getSaldo().toString(),
+			-1, saldo.compareTo(cuenta.getSaldo()));
 		
 	}
 	
 	@Test(expected=Exception.class)
 	public void noPuedeDepositarEnCuentasInactivas() throws Exception {
-		int CBU = cuentas.keySet().iterator().next();
-		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
+		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 
 		cuenta.inactivar();
 		
-		getObject().depositar(CBU, new Dinero(cuenta.getMoneda(), 1000));
+		getObject().depositar(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1000));
 	}
 
 	@Test(expected=Exception.class)
 	public void noPuedeDepositarDineroDeMonedaDiferenteAComoEstaNominadaLaCuenta() throws Exception {
-		int CBU = cuentas.keySet().iterator().next();
-		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
+		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 
 		Moneda denominacion;
 		
@@ -67,53 +73,45 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 			denominacion = Moneda.PESO;
 		}
 		
-		getObject().depositar(CBU, new Dinero(denominacion, 1000));
+		getObject().depositar(cbuCajaDeAhorroPesos, new Dinero(denominacion, 1000));
 	}
 	
 	@Test
 	public void puedeExtraerEfectivoDeUnaCajaDeAhorroHabilitada() throws Exception {
-		int CBU = 1;
-		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
+		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 		Dinero saldo = cuenta.getSaldo();
 
-		getObject().extraer(CBU, new Dinero(cuenta.getMoneda(), 10));
+		getObject().extraer(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1));
 		
 		assertTrue(cuenta.getSaldo().compareTo(saldo) < 0);
 	}
 	
 	@Test(expected=Exception.class)
 	public void noPuedeExtraerEfectivoDeUnaCajaDeAhorroInactiva() throws Exception {
-		int CBU = 1;
-		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
+		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 
 		cuenta.inactivar();
 		
-		getObject().depositar(CBU, new Dinero(cuenta.getMoneda(), 1000));
+		getObject().depositar(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1000));
 	}
 	
 	@Test(expected=Exception.class)
 	public void noPuedeExtraerMasDelSaldoDisponibleDeUnaCajaDeAhorro() throws Exception {
-		int CBU = 1;
-		CuentaDeCliente<?> cuenta = cuentas.get(CBU);
+		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 		Dinero saldo = cuenta.getSaldo();
 
-		getObject().extraer(CBU, saldo.sumar(10));
+		getObject().extraer(cbuCajaDeAhorroPesos, saldo.sumar(10));
 	}
 	
 	@Test
 	public void puedeTransferirDineroEntreDosCuentasHabilitadas() throws Exception {
-		Iterator<Integer> it = cuentas.keySet().iterator();
-		
-		int origen = it.next();
-		int destino = it.next();
-		
-		CuentaDeCliente<?> cuentaOrigen = cuentas.get(origen);
-		CuentaDeCliente<?> cuentaDestino = cuentas.get(destino);
+		CuentaDeCliente<?> cuentaOrigen = cuentas.get(cbuCajaDeAhorroPesos);
+		CuentaDeCliente<?> cuentaDestino = cuentas.get(cbuCuentaCorriente);
 		
 		Dinero saldoOrigen = cuentaOrigen.getSaldo();
 		Dinero saldoDestino = cuentaDestino.getSaldo();
 		
-		getObject().transferir(origen, destino, cuentaOrigen.getSaldo());
+		getObject().transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, cuentaOrigen.getSaldo());
 		
 		assertTrue(cuentaOrigen.getSaldo().compareTo(saldoOrigen) < 0);
 		assertTrue(cuentaDestino.getSaldo().compareTo(saldoDestino) > 0);
@@ -121,48 +119,31 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 	
 	@Test(expected=Exception.class)
 	public void noPuedeTransferirDineroDesdeCuentasInactivas() throws Exception {
-		Iterator<Integer> it = cuentas.keySet().iterator();
-		
-		int origen = it.next();
-		int destino = it.next();
-		
-		CuentaDeCliente<?> cuentaOrigen = cuentas.get(origen);
+		CuentaDeCliente<?> cuentaOrigen = cuentas.get(cbuCajaDeAhorroPesos);
 		cuentaOrigen.inactivar();
 		
-		getObject().transferir(origen, destino, new Dinero(Moneda.PESO, 5));
+		getObject().transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, new Dinero(Moneda.PESO, 5));
 	}
 	
 	@Test(expected=Exception.class)
 	public void noPuedeTransferirDineroHaciaCuentasInactivas() throws Exception {
-		Iterator<Integer> it = cuentas.keySet().iterator();
-		
-		int origen = it.next();
-		int destino = it.next();
-		
-		CuentaDeCliente<?> cuentaDestino = cuentas.get(destino);
+		CuentaDeCliente<?> cuentaDestino = cuentas.get(cbuCuentaCorriente);
 		cuentaDestino.inactivar();
 		
-		getObject().transferir(origen, destino, new Dinero(Moneda.PESO, 5));
+		getObject().transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, new Dinero(Moneda.PESO, 5));
 	}
 	
 	@Test(expected=Exception.class)
 	public void noPuedeTransferirMasDineroDelSaldoQueTengaLaCuentaDeOrigen() throws Exception {
-		Iterator<Integer> it = cuentas.keySet().iterator();
+		CuentaDeCliente<?> cuentaOrigen = cuentas.get(cbuCajaDeAhorroPesos);
 		
-		int origen = it.next();
-		int destino = it.next();
-		
-		CuentaDeCliente<?> cuentaOrigen = cuentas.get(origen);
-		
-		getObject().transferir(origen, destino, cuentaOrigen.getSaldo().sumar(1));
+		getObject().transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, cuentaOrigen.getSaldo().sumar(1));
 	}
 	
 	@Test(expected=Exception.class)
 	public void noPuedeTransferirDineroSiElSaldoNoAlcanzaAdemasParaCobrarLosImpuestosCorrespondientes() throws Exception {
-		Iterator<Integer> it = cuentas.keySet().iterator();
-		
-		int origen = 2;
-		int destino = it.next();
+		int origen = cbuCuentaCorriente;
+		int destino = cbuCajaDeAhorroPesos;
 		
 		CuentaCorriente cuentaOrigen = (CuentaCorriente) cuentas.get(origen);
 		
@@ -171,17 +152,43 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 	
 	@Test
 	public void debeConvertirLaMonedaAlTipoDeDestinoUsandoElCambioVigente() throws Exception {
+		CuentaDeCliente<?> cuentaPesos = cuentas.get(cbuCajaDeAhorroPesos);
+		Dinero saldoPesos = cuentaPesos.getSaldo();
 		
+		CuentaDeCliente<?> cuentaDolares = cuentas.get(cbuCajaDeAhorroDolares);
+		Dinero saldoDolares = cuentaDolares.getSaldo();
+		
+		Dinero monto = new Dinero(Moneda.PESO, 100);
+		
+		getObject().transferir(cbuCajaDeAhorroPesos, cbuCajaDeAhorroDolares, monto);
+		
+		assertTrue(cuentaPesos.getSaldo().compareTo(saldoPesos) < 0);
+		assertTrue(cuentaDolares.getSaldo().compareTo(saldoDolares) > 0);
 	}
 	
 	@Test
 	public void debeRegistrarLaMonedaElMontoYElTipoDeCambioEnElCampoDeObservacionesSiHuboUnaConversion() throws Exception {
-		fail("Not yet implemented");
+		CuentaDeCliente<?> cuentaPesos = cuentas.get(cbuCajaDeAhorroPesos);
+		
+		Dinero monto = new Dinero(Moneda.PESO, 100);
+		
+		getObject().transferir(cbuCajaDeAhorroPesos, cbuCajaDeAhorroDolares, monto);
+		
+		Transaccion debito = cuentaPesos.getTransacciones().firstElement();
+		assertThat(debito.getObservaciones(), new StringContains("Conversión de moneda"));
+		assertThat(
+			debito.getObservaciones(), 
+			new StringContains("Cambio vigente: " + String.valueOf(Banco.instance().getCambioVigente()))
+		);
+		assertThat(
+			debito.getObservaciones(),
+			new StringContains(monto.toString())
+		);
 	}
 	
 	@Test
 	public void puedeListarTodosLosMovimientosDeUnaCuenta() throws Exception {
-		CuentaDeCliente<?> cuenta = cuentas.get(cuentas.keySet().iterator().next());
+		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 		
 		assertEquals(
 			cuenta.getTransacciones(), 
@@ -191,13 +198,13 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 	
 	@Test
 	public void puedeListarLosUltimosNMovimientosDeUnaCuenta() throws Exception {
-		CuentaDeCliente<?> cuenta = cuentas.get(cuentas.keySet().iterator().next());
+		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 		cuenta.depositar(new Dinero(cuenta.getMoneda(), 3));
 		cuenta.depositar(new Dinero(cuenta.getMoneda(), 3));
 		cuenta.depositar(new Dinero(cuenta.getMoneda(), 3));
 		cuenta.depositar(new Dinero(cuenta.getMoneda(), 3));
 		
-		Set<Transaccion> expected = new HashSet<>();
+		Stack<Transaccion> expected = new Stack<>();
 		
 		int i = 0;
 		
@@ -210,7 +217,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 			
 		assertEquals(
 			expected,
-			getObject().movimientos(cuenta.getCBU(), 3)
+			getObject().movimientos(cbuCajaDeAhorroPesos, 3)
 		);
 	}
 }

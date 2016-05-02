@@ -2,8 +2,8 @@
 class CuentasFixture {
 	static CajaDeAhorro cajaDeAhorroPesos() throws Exception {
 		return new CajaDeAhorro(
-			(int) (Math.random() * 100), 
-			new Dinero(Moneda.PESO, (float) Math.random() * 100), 
+			(int) ((Math.random() + 4) * 1000), 
+			new Dinero(Moneda.PESO, (float) (Math.random() + 1) * 100000), 
 			ClientesFixture.personasFisicas(), 
 			new Dinero(Moneda.PESO, (float) Math.random() * 10)
 		);
@@ -11,8 +11,8 @@ class CuentasFixture {
 	
 	static CajaDeAhorro cajaDeAhorroDolares() throws Exception {
 		return new CajaDeAhorro(
-			(int) (Math.random() * 100), 
-			new Dinero(Moneda.DOLAR, (float) Math.random() * 100), 
+			(int) ((Math.random() + 4) * 1000),
+			new Dinero(Moneda.DOLAR, (float) (Math.random() + 1) * 100000), 
 			ClientesFixture.personasFisicas(), 
 			new Dinero(Moneda.DOLAR, (float) Math.random() * 10)
 		);
@@ -20,8 +20,8 @@ class CuentasFixture {
 	
 	static CuentaCorriente cuentaCorriente() throws Exception {
 		return new CuentaCorriente(
-			(int) (Math.random() * 100), 
-			new Dinero(Moneda.PESO, (float) Math.random() * 100), 
+			(int) ((Math.random() + 4) * 1000),
+			new Dinero(Moneda.PESO, (float) (Math.random() + 1) * 100000), 
 			ClientesFixture.clientes(), 
 			new Dinero(Moneda.PESO, (float) Math.random() * 10)
 		);

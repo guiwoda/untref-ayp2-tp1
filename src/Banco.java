@@ -31,4 +31,8 @@ public final class Banco {
 	public int getPorcentajeComision() {
 		return PORCENTAJE_COMISION;
 	}
+
+	public double getCambioVigente() {
+		return 14.5;
+	}
 }

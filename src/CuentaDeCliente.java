@@ -17,6 +17,10 @@ public class CuentaDeCliente<C extends Cliente> extends Cuenta {
 		if (titulares.isEmpty()) {
 			throw new Exception("Una cuenta requiere al menos un cliente asociado.");
 		}
+		
+		for (C titular : titulares) {
+			titular.addCuenta(this);
+		}
 
 		this.mantenimiento = mantenimiento;
 		this.titulares = titulares;
@@ -25,20 +29,24 @@ public class CuentaDeCliente<C extends Cliente> extends Cuenta {
 	}
 	
 	@Override
-	public Dinero depositar(Dinero dinero) throws Exception {
+	public Dinero depositar(Dinero dinero, String observaciones) throws Exception {
 		if (!activa) {
 			throw new Exception("Una cuenta inactiva no puede acreditar dinero.");
 		}
 		
-		return super.depositar(dinero);
+		return super.depositar(dinero, observaciones);
 	}
 	
 	public Dinero extraer(Dinero dinero) throws Exception {
+		return extraer(dinero, "");
+	}
+	
+	public Dinero extraer(Dinero dinero, String observaciones) throws Exception {
 		if (!activa) {
 			throw new Exception("Una cuenta inactiva no puede extraer dinero.");
 		}
 		
-		transacciones.add(Transaccion.debito(new Date(), (Dinero) dinero, ""));
+		transacciones.add(Transaccion.debito(new Date(), dinero, "", observaciones));
 		
 		saldo = calcularSaldo();
 
@@ -58,7 +66,26 @@ public class CuentaDeCliente<C extends Cliente> extends Cuenta {
 	}
 	
 	public void transferir(Cuenta otra, Dinero monto) throws Exception {
-		extraer(monto);
-		otra.depositar(monto);
+		Dinero transferencia = monto;
+		String observaciones = "";
+		
+		if (!otra.getMoneda().equals(getMoneda())) {
+			double cambioVigente = Banco.instance().getCambioVigente();
+			
+			if (otra.getMoneda().equals(Moneda.PESO)) {
+				transferencia = monto.convertir(Moneda.PESO, cambioVigente);
+			} else {
+				transferencia = monto.convertir(Moneda.DOLAR, 1 / cambioVigente);
+			}
+			
+			observaciones = new StringBuilder()
+				.append("Conversión de moneda").append("\n")
+				.append(monto.toString()).append("\n")
+				.append("Cambio vigente: ").append(Banco.instance().getCambioVigente())
+				.toString();
+		}
+		
+		extraer(monto, observaciones);
+		otra.depositar(transferencia);
 	}
 }

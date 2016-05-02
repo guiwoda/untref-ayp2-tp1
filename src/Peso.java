@@ -1,10 +1,11 @@
 
 public class Peso implements Moneda {
 	private static final int MANTENIMIENTO_CAJA_DE_AHORRO = 1500;
+	private static final String SIMBOLO = "$";
 	
 	@Override
-	public String getSimbolo() {
-		return "$";
+	public final String getSimbolo() {
+		return SIMBOLO;
 	}
 	
 	@Override

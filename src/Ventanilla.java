@@ -1,7 +1,6 @@
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+import java.util.Stack;
 
 public class Ventanilla {
 	private Map<Integer, CuentaDeCliente<?>> cuentas;
@@ -10,12 +9,10 @@ public class Ventanilla {
 		this.cuentas = cuentas;
 	}
 	
-	public CuentaDeCliente<?> depositar(int CBU, Dinero monto) throws Exception {
+	public void depositar(int CBU, Dinero monto) throws Exception {
 		CuentaDeCliente<?> cuenta = get(CBU);
 		
 		cuenta.depositar(monto);
-		
-		return cuenta;
 	}
 
 	public void extraer(int CBU, Dinero monto) throws Exception {
@@ -45,12 +42,12 @@ public class Ventanilla {
 		return cuenta;
 	}
 
-	public Set<Transaccion> movimientos(int cbu) throws Exception {
+	public Stack<Transaccion> movimientos(int cbu) throws Exception {
 		return get(cbu).getTransacciones();
 	}
 
-	public Set<Transaccion> movimientos(int cbu, int cantidad) throws Exception {
-		Set<Transaccion> result = new HashSet<>();
+	public Stack<Transaccion> movimientos(int cbu, int cantidad) throws Exception {
+		Stack<Transaccion> result = new Stack<>();
 		Iterator<Transaccion> it = get(cbu).getTransacciones().iterator();
 		
 		int i = 0;
