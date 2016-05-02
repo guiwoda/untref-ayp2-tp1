@@ -52,6 +52,13 @@ class ClientesFixture {
 		return clientes;
 	}
 	
+	static Set<PersonaFisica> personasFisicas(PersonaFisica personaFisica) throws Exception {
+		Set<PersonaFisica> clientes = personasFisicas();
+		clientes.add(personaFisica);
+		
+		return clientes;
+	}
+	
 	static Set<PersonaFisica> personasFisicas() throws Exception {
 		return personasFisicas(1);
 	}

@@ -1,12 +1,16 @@
 
 class CuentasFixture {
-	static CajaDeAhorro cajaDeAhorroPesos() throws Exception {
+	static CajaDeAhorro cajaDeAhorroPesos(PersonaFisica personaFisica) throws Exception {
 		return new CajaDeAhorro(
 			(int) ((Math.random() + 4) * 1000), 
 			new Dinero(Moneda.PESO, (float) (Math.random() + 1) * 100000), 
-			ClientesFixture.personasFisicas(), 
+			ClientesFixture.personasFisicas(personaFisica), 
 			new Dinero(Moneda.PESO, (float) Math.random() * 10)
 		);
+	}
+	
+	static CajaDeAhorro cajaDeAhorroPesos() throws Exception {
+		return cajaDeAhorroPesos(ClientesFixture.personaFisica());
 	}
 	
 	static CajaDeAhorro cajaDeAhorroDolares() throws Exception {
