@@ -46,7 +46,7 @@ public class CuentaCorriente extends CuentaDeCliente<Cliente> {
 	}
 	
 	@Override
-	public Dinero extraer(Dinero dinero) throws Exception {
+	public Dinero extraer(Dinero dinero, String observaciones) throws Exception {
 		int porcentajeComision = Banco.instance().getPorcentajeComision();
 		
 		// Planteo los porcentajes como un array de partes (ej: { 3, 97 }
@@ -64,7 +64,7 @@ public class CuentaCorriente extends CuentaDeCliente<Cliente> {
 		// Deposito en la cuenta de retenciones la parte retenida
 		Banco.instance().getRetenciones().depositar(depositos[0]);
 		
-		return super.extraer(extraccion);
+		return super.extraer(extraccion, observaciones);
 	}
 
 	private boolean operacionSuperaSobregiroPermitido(Dinero montoAExtraer) throws Exception {

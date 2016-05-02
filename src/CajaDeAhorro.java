@@ -28,14 +28,14 @@ public class CajaDeAhorro extends CuentaDeCliente<PersonaFisica> {
 	}
 
 	@Override
-	public Dinero extraer(Dinero dinero) throws Exception {
+	public Dinero extraer(Dinero dinero, String observaciones) throws Exception {
 		Dinero resultado = saldo.restar(dinero);
 
 		if (resultado.isNegativo()) {
 			throw new Exception("Las cajas de ahorro no pueden tener saldo negativo.");
 		}
 
-		return super.extraer(dinero);
+		return super.extraer(dinero, observaciones);
 	}
 
 	public Dinero getCostoDeMantenimiento() {

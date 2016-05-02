@@ -1,22 +1,20 @@
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 import org.hamcrest.core.StringContains;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
+public class VentanillaTest {
 	private Map<Integer, CuentaDeCliente<?>> cuentas;
-	
 	private int cbuCajaDeAhorroPesos;
 	private int cbuCajaDeAhorroDolares;
 	private int cbuCuentaCorriente;
+	private Ventanilla ventanilla;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -33,19 +31,16 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		cuentas.put(cbuCajaDeAhorroPesos, cajaDeAhorroPesos);
 		cuentas.put(cbuCajaDeAhorroDolares, cajaDeAhorroDolares);
 		cuentas.put(cbuCuentaCorriente, cuentaCorriente);
+		
+		ventanilla = new Ventanilla(cuentas);
 	}
 	
-	@Override
-	public Ventanilla getObject() throws Exception {
-		return new Ventanilla(cuentas);
-	}
-
 	@Test
 	public void puedeDepositarDineroDeLaMonedaCorrespondienteEnUnaCuentaHabilitada() throws Exception {
 		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 		Dinero saldo = cuenta.getSaldo();
 		
-		getObject().depositar(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1000));
+		ventanilla.depositar(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1000));
 		
 		assertEquals(saldo.toString() + " dice ser mayor que " + cuenta.getSaldo().toString(),
 			-1, saldo.compareTo(cuenta.getSaldo()));
@@ -58,7 +53,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 
 		cuenta.inactivar();
 		
-		getObject().depositar(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1000));
+		ventanilla.depositar(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1000));
 	}
 
 	@Test(expected=Exception.class)
@@ -73,7 +68,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 			denominacion = Moneda.PESO;
 		}
 		
-		getObject().depositar(cbuCajaDeAhorroPesos, new Dinero(denominacion, 1000));
+		ventanilla.depositar(cbuCajaDeAhorroPesos, new Dinero(denominacion, 1000));
 	}
 	
 	@Test
@@ -81,7 +76,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 		Dinero saldo = cuenta.getSaldo();
 
-		getObject().extraer(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1));
+		ventanilla.extraer(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1));
 		
 		assertTrue(cuenta.getSaldo().compareTo(saldo) < 0);
 	}
@@ -92,7 +87,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 
 		cuenta.inactivar();
 		
-		getObject().depositar(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1000));
+		ventanilla.depositar(cbuCajaDeAhorroPesos, new Dinero(cuenta.getMoneda(), 1000));
 	}
 	
 	@Test(expected=Exception.class)
@@ -100,7 +95,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		CuentaDeCliente<?> cuenta = cuentas.get(cbuCajaDeAhorroPesos);
 		Dinero saldo = cuenta.getSaldo();
 
-		getObject().extraer(cbuCajaDeAhorroPesos, saldo.sumar(10));
+		ventanilla.extraer(cbuCajaDeAhorroPesos, saldo.sumar(10));
 	}
 	
 	@Test
@@ -111,7 +106,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		Dinero saldoOrigen = cuentaOrigen.getSaldo();
 		Dinero saldoDestino = cuentaDestino.getSaldo();
 		
-		getObject().transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, cuentaOrigen.getSaldo());
+		ventanilla.transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, cuentaOrigen.getSaldo());
 		
 		assertTrue(cuentaOrigen.getSaldo().compareTo(saldoOrigen) < 0);
 		assertTrue(cuentaDestino.getSaldo().compareTo(saldoDestino) > 0);
@@ -122,7 +117,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		CuentaDeCliente<?> cuentaOrigen = cuentas.get(cbuCajaDeAhorroPesos);
 		cuentaOrigen.inactivar();
 		
-		getObject().transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, new Dinero(Moneda.PESO, 5));
+		ventanilla.transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, new Dinero(Moneda.PESO, 5));
 	}
 	
 	@Test(expected=Exception.class)
@@ -130,14 +125,14 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		CuentaDeCliente<?> cuentaDestino = cuentas.get(cbuCuentaCorriente);
 		cuentaDestino.inactivar();
 		
-		getObject().transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, new Dinero(Moneda.PESO, 5));
+		ventanilla.transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, new Dinero(Moneda.PESO, 5));
 	}
 	
 	@Test(expected=Exception.class)
 	public void noPuedeTransferirMasDineroDelSaldoQueTengaLaCuentaDeOrigen() throws Exception {
 		CuentaDeCliente<?> cuentaOrigen = cuentas.get(cbuCajaDeAhorroPesos);
 		
-		getObject().transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, cuentaOrigen.getSaldo().sumar(1));
+		ventanilla.transferir(cbuCajaDeAhorroPesos, cbuCuentaCorriente, cuentaOrigen.getSaldo().sumar(1));
 	}
 	
 	@Test(expected=Exception.class)
@@ -147,7 +142,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		
 		CuentaCorriente cuentaOrigen = (CuentaCorriente) cuentas.get(origen);
 		
-		getObject().transferir(origen, destino, cuentaOrigen.getSaldo().sumar(cuentaOrigen.getSobregiro()));
+		ventanilla.transferir(origen, destino, cuentaOrigen.getSaldo().sumar(cuentaOrigen.getSobregiro()));
 	}
 	
 	@Test
@@ -160,7 +155,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		
 		Dinero monto = new Dinero(Moneda.PESO, 100);
 		
-		getObject().transferir(cbuCajaDeAhorroPesos, cbuCajaDeAhorroDolares, monto);
+		ventanilla.transferir(cbuCajaDeAhorroPesos, cbuCajaDeAhorroDolares, monto);
 		
 		assertTrue(cuentaPesos.getSaldo().compareTo(saldoPesos) < 0);
 		assertTrue(cuentaDolares.getSaldo().compareTo(saldoDolares) > 0);
@@ -172,9 +167,9 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		
 		Dinero monto = new Dinero(Moneda.PESO, 100);
 		
-		getObject().transferir(cbuCajaDeAhorroPesos, cbuCajaDeAhorroDolares, monto);
+		ventanilla.transferir(cbuCajaDeAhorroPesos, cbuCajaDeAhorroDolares, monto);
 		
-		Transaccion debito = cuentaPesos.getTransacciones().firstElement();
+		Transaccion debito = cuentaPesos.getTransacciones().peek();
 		assertThat(debito.getObservaciones(), new StringContains("Conversión de moneda"));
 		assertThat(
 			debito.getObservaciones(), 
@@ -192,7 +187,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 		
 		assertEquals(
 			cuenta.getTransacciones(), 
-			getObject().movimientos(cuenta.getCBU())
+			ventanilla.movimientos(cuenta.getCBU())
 		);
 	}
 	
@@ -217,7 +212,7 @@ public class VentanillaTest extends TrabajoPracticoTest<Ventanilla> {
 			
 		assertEquals(
 			expected,
-			getObject().movimientos(cbuCajaDeAhorroPesos, 3)
+			ventanilla.movimientos(cbuCajaDeAhorroPesos, 3)
 		);
 	}
 }
