@@ -34,8 +34,8 @@ public class GestionDeClientesTest extends TrabajoPracticoTest<GestionDeClientes
 	
 	@Test
 	public void puedeDarDeBajaClientesSinCuentasAsociadas() throws Exception{
-		getObject().darDeAltaPersonaFisica("Ivan", "8-97928549-40", casa, "4840-8843", Documento.dni(49398370), EstadoCivil.SOLTERO, "Desempleado", "Familia");
-		
+		getObject().darDeBaja("8-97928549-40");
+		assertEquals(false, cliente.isActivo());
 	}
 	
 	@Test(expected = Exception.class)
