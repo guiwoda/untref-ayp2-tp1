@@ -23,10 +23,6 @@ public class CajaDeAhorro extends CuentaDeCliente<PersonaFisica> {
 			.toString();
 	}
 
-	public Set<PersonaFisica> getTitulares() {
-		return titulares;
-	}
-
 	@Override
 	public Dinero extraer(Dinero dinero, String observaciones) throws Exception {
 		Dinero resultado = saldo.restar(dinero);
