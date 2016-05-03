@@ -32,7 +32,7 @@ public class CajaDeAhorro extends CuentaDeCliente<PersonaFisica> {
 		Dinero resultado = saldo.restar(dinero);
 
 		if (resultado.isNegativo()) {
-			throw new Exception("Las cajas de ahorro no pueden tener saldo negativo.");
+			throw new Exception("Saldo insuficiente.");
 		}
 
 		return super.extraer(dinero, observaciones);
