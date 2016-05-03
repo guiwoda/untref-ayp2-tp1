@@ -1,48 +1,101 @@
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class DineroTest extends TrabajoPracticoTest<Dinero> {
-
+	private Dinero pesos;
+	private Dinero dolares;
+	
+	@Before
+	public void setUp() throws Exception {
+		pesos = new Dinero(Moneda.PESO, 10);
+		dolares = new Dinero(Moneda.DOLAR, 5);
+	}
+	
+	@Test(expected=Exception.class)
+	public void necesitaUnaMoneda() throws Exception {
+		new Dinero(null);
+	}
+	
 	@Test
 	public void puedoSumarloConOtroDinero() throws Exception {
-		Dinero dinero = new Dinero(new Peso(), 10);
-
-		assertEquals(new Dinero(new Peso(), 20), dinero.sumar(dinero));
+		assertEquals(new Dinero(Moneda.PESO, 20), pesos.sumar(pesos));
+	}
+	
+	@Test(expected=Exception.class)
+	public void noPuedoSumarloConOtroDineroDeDiferenteMoneda() throws Exception {
+		pesos.sumar(dolares);
+	}
+	
+	@Test
+	public void puedoRestarloConOtroDinero() throws Exception {
+		assertEquals(new Dinero(Moneda.PESO, 5), pesos.restar(new Dinero(Moneda.PESO, 5)));
+	}
+	
+	@Test(expected=Exception.class)
+	public void noPuedoRestarloConOtroDineroDeDiferenteMoneda() throws Exception {
+		pesos.restar(dolares);
 	}
 
 	@Test
 	public void puedoSumarleUnaCantidadEntera() throws Exception {
-		Dinero dinero = new Dinero(new Peso(), 10);
-
-		assertEquals(new Dinero(new Peso(), 21), dinero.sumar(11));
+		assertEquals(new Dinero(Moneda.PESO, 21), pesos.sumar(11));
+	}
+	
+	@Test
+	public void puedoRestarleUnaCantidadEntera() throws Exception {
+		assertEquals(new Dinero(Moneda.PESO, 9), pesos.restar(1));
+	}
+	
+	@Test
+	public void puedoSumarleUnaFraccion() throws Exception {
+		assertEquals(1050, pesos.sumar(0.5).getCentavos());
+	}
+	
+	@Test
+	public void puedoRestarleUnaFraccion() throws Exception {
+		assertEquals(950, pesos.restar(0.5).getCentavos());
+	}
+	
+	@Test
+	public void puedoInvertirSuValor() throws Exception {
+		assertEquals(-1000, pesos.invertir().getCentavos());
+	}
+	
+	@Test
+	public void puedeDecirmeSiEsPositivo() throws Exception {
+		assertTrue(pesos.isPositivo());
+		assertFalse(pesos.invertir().isPositivo());
+	}
+	
+	@Test
+	public void puedeDecirmeSiEsNegativo() throws Exception {
+		assertFalse(pesos.isNegativo());
+		assertTrue(pesos.invertir().isNegativo());
 	}
 
 	@Test
 	public void puedeDistribuirseEnPartesSinPerderCentavos() throws Exception {
-		Dinero dinero = new Dinero(new Peso(), 9.99f);
-
 		int[] partes = { 50, 50 };
 
-		Dinero[] resultado = dinero.distribuir(partes);
+		Dinero[] resultado = pesos.distribuir(partes);
 
-		assertEquals(dinero, resultado[0].sumar(resultado[1]));
+		assertEquals(pesos, resultado[0].sumar(resultado[1]));
 	}
 	
 	@Test
 	public void puedeDividirse() throws Exception {
-		Dinero dinero = new Dinero(new Peso(), 100);
-		Dinero result = dinero.dividir(2);
+		Dinero result = pesos.dividir(2);
 		
-		assertEquals(5000, result.getCentavos());
+		assertEquals(500, result.getCentavos());
 	}
 	
 	@Test
 	public void puedeMultiplicarse() throws Exception {
-		Dinero dinero = new Dinero(new Peso(), 50);
-		Dinero result = dinero.multiplicar(2);
+		Dinero result = pesos.multiplicar(2);
 		
-		assertEquals(10000, result.getCentavos());
+		assertEquals(2000, result.getCentavos());
 	}
 	
 	@Test
@@ -55,14 +108,20 @@ public class DineroTest extends TrabajoPracticoTest<Dinero> {
 	
 	@Test
 	public void implementaComparable() throws Exception {
-		Dinero dinero = new Dinero(new Dolar(), 100);
-		Dinero menor = new Dinero(new Dolar(), 50);
-		Dinero mayor = new Dinero(new Dolar(), 150);
-		Dinero igual = new Dinero(new Dolar(), 100);
+		Dinero dinero = new Dinero(Moneda.DOLAR, 100);
+		Dinero menor = new Dinero(Moneda.DOLAR, 50);
+		Dinero mayor = new Dinero(Moneda.DOLAR, 150);
+		Dinero igual = new Dinero(Moneda.DOLAR, 100);
 		
 		assertTrue(dinero.compareTo(menor) > 0);
 		assertTrue(dinero.compareTo(mayor) < 0);
 		assertTrue(dinero.compareTo(igual) == 0);
+	}
+	
+	@Test
+	public void puedoSaberEnQueMonedaEsta() throws Exception {
+		assertEquals(Moneda.PESO, pesos.getMoneda());
+		assertEquals(Moneda.DOLAR, dolares.getMoneda());
 	}
 
 	@Override

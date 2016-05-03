@@ -19,10 +19,10 @@ public class Dinero implements Comparable<Dinero> {
 		this.centavos = monto * FACTOR_DECIMAL;
 	}
 
-	public Dinero(Moneda moneda, float monto) throws Exception {
+	public Dinero(Moneda moneda, double monto) throws Exception {
 		this(moneda);
 
-		this.centavos = Math.round(monto * FACTOR_DECIMAL);
+		this.centavos = (int) Math.round(monto * FACTOR_DECIMAL);
 	}
 
 	public Dinero sumar(Dinero dinero) throws Exception {
@@ -49,12 +49,12 @@ public class Dinero implements Comparable<Dinero> {
 		return crearConCentavos(this.centavos - monto * FACTOR_DECIMAL);
 	}
 
-	public Dinero sumar(float monto) throws Exception {
-		return new Dinero(moneda, monto).sumar(this.centavos);
+	public Dinero sumar(double monto) throws Exception {
+		return new Dinero(moneda, monto).sumar(this);
 	}
 
-	public Dinero restar(float monto) throws Exception {
-		return new Dinero(moneda, -monto).sumar(this.centavos);
+	public Dinero restar(double monto) throws Exception {
+		return new Dinero(moneda, -monto).sumar(this);
 	}
 	
 	public Dinero dividir(double dividendo) throws Exception {
