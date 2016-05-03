@@ -29,6 +29,9 @@ public class GestionDeClientes {
 	}
 	public void darDeBaja (String cuit) throws Exception{
 		Cliente cliente = clientes.get(cuit);
+		if (clientes.get(cuit) == null){
+			throw new Exception ("El cliente no existe");
+		}
 		if (cliente.hasCuentas()){
 			throw new Exception ("Cliente posee cuentas activas, imposible dar de baja");
 		}
