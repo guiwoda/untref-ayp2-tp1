@@ -57,6 +57,14 @@ public class CuentaDeCliente<C extends Cliente> extends Cuenta {
 		activa = false;
 	}
 	
+	public void activar() {
+		activa = true;
+	}
+	
+	public boolean isActiva() {
+		return activa;
+	}
+	
 	public Dinero getCostoDeMantenimiento() {
 		return mantenimiento;
 	}

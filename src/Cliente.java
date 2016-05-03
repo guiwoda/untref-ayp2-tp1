@@ -75,7 +75,11 @@ abstract class Cliente implements Comparable<Cliente> {
 		return activo;
 	}
 
-	public void addCuenta(CuentaDeCliente cuenta) {
+	public void addCuenta(CuentaDeCliente cuenta) throws Exception {
+		if (! activo) {
+			throw new Exception("El cliente no está activo.");
+		}
+		
 		this.cuentas.add(cuenta);
 	}
 
