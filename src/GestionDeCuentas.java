@@ -1,31 +1,40 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class GestionDeCuentas {
-	Map<String, Cliente> clientes = new HashMap<>();
-	Map<Documento, PersonaFisica> personasFisicas = new HashMap<>();
-	Map<String, PersonaJuridica> personasJuridicas = new HashMap<>();
-    
-	public double depositoInicial;
+	private Map<Integer, CuentaDeCliente<?>> cuentas;
 	
-public void aperturaDeCajaDeAhorro(PersonaFisica cliente, double depositoInicial, double costoDeMantenimiento)throws Exception { 
-	this.depositoInicial = depositoInicial;
+	public GestionDeCuentas(Map<Integer, CuentaDeCliente<?>> cuentas) {
+		this.cuentas = cuentas;
+	}
 	
-}
+	public CajaDeAhorro abrirCajaDeAhorro(Dinero deposito, Set<PersonaFisica> titulares, Dinero interes) throws Exception {
+		CajaDeAhorro caja = new CajaDeAhorro(getProximoCBU(), deposito, titulares, interes);
+		cuentas.put(caja.getCBU(), caja);
+		
+		return caja;
+	}
 
-public void aperturaDeCuentaCorriente( double depositoInicial)throws Exception {
-	
-	
-}
+	private int getProximoCBU() {
+		int candidato = cuentas.size();
+		
+		while (cuentas.containsKey(candidato)) {
+			candidato++;
+		}
+		
+		return candidato;
+	}
 
-public void inhabilitarCuenta() {
-	
-	
-}
+	public void abrirCuentaCorriente(double depositoInicial) throws Exception {
 
-public void habilitarCuenta() {
-	
-	SOLO PARA VER SI CAMBIA Y HACE EL COMMIT
-}
+	}
 
+	public void inhabilitarCuenta() {
+
+	}
+
+	public void habilitarCuenta() {
+	
+	}
 }
