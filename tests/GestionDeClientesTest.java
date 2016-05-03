@@ -15,7 +15,7 @@ public class GestionDeClientesTest {
 		gestion = getObject();
 		casa = new Domicilio("La julia 338", 8877, "Saenz Peña", "Buenos Aires");
 		cliente = gestion.darDeAltaPersonaFisica("Ivan", "8-97928549-40", casa,
-				"4840-8843", Documento.dni(49398370), EstadoCivil.SOLTERO,
+				"4840-8843", Documento.dni(49390375), EstadoCivil.SOLTERO,
 				"Desempleado", "Familia");
 		persona = gestion.darDeAltaPersonaFisica("Ivan", "8-97923459-40", casa,
 				"4840-8843", Documento.dni(49398370), EstadoCivil.SOLTERO,
@@ -70,8 +70,7 @@ public class GestionDeClientesTest {
 	@Test
 	public void puedeBuscarClientesPorNumeroDeDocumento() throws Exception {
 		PersonaFisica otro;
-		Documento doc = Documento.dni(49398370);
-		otro = gestion.buscarClientesPorNumeroDeDocumento(doc);
+		otro = gestion.buscarClientesPorNumeroDeDocumento(Documento.dni(49398370));
 		assertEquals(persona, otro);
 
 	}

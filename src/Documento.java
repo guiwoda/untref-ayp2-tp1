@@ -35,4 +35,18 @@ public final class Documento {
 	public String toString() {
 		return tipo + ": " + numero;
 	}
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof Documento && equals((Documento) obj);
+	}
+	public boolean equals(Documento other) {
+		return numero.equals( other.numero);
+	}
+
+
+	@Override
+	public int hashCode() {
+		return numero.hashCode();
+	}
+
 }
