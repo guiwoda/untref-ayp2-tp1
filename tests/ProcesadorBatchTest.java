@@ -106,7 +106,6 @@ public class ProcesadorBatchTest {
 		for (String line : Files.readAllLines(path)) {
 			content = content + line + "\n";
 		}
-		System.out.println(content);
 		assertThat(content, new StringContains(String.valueOf(laQueFalla.getCBU())));
 		assertThat(content, new StringContains("Saldo insuficiente."));
 	}
