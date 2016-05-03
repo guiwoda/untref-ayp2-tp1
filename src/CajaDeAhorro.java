@@ -34,10 +34,6 @@ public class CajaDeAhorro extends CuentaDeCliente<PersonaFisica> {
 		return super.extraer(dinero, observaciones);
 	}
 
-	public Dinero getCostoDeMantenimiento() {
-		return mantenimiento;
-	}
-
 	public Dinero getInteres() {
 		return interes;
 	}
