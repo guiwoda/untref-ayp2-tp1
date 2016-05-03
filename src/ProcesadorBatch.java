@@ -11,7 +11,7 @@ public class ProcesadorBatch {
 		this.cuentas = cuentas;
 	}
 
-	public void cobrarMantenimientos() throws IOException {
+	public void cobrarMantenimientos() throws Exception {
 		CuentaEspecial mantenimientos = Banco.instance().getMantenimientos();
 		Date hoy = new Date();
 
@@ -35,7 +35,7 @@ public class ProcesadorBatch {
 		cuenta.transferir(mantenimientos, cuenta.getCostoDeMantenimiento());
 	}
 	
-	private void registrarCobroExitoso(FileWriter archivo, CajaDeAhorro cuenta) throws IOException {
+	private void registrarCobroExitoso(FileWriter archivo, CajaDeAhorro cuenta) throws Exception {
 		archivo.write(
 			new StringBuilder()
 				.append(cuenta.getCBU()).append(", ")
