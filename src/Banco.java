@@ -2,22 +2,23 @@ public final class Banco {
 	private static final int		CBU_RETENCIONES		= -1;
 	private static final int		CBU_MANTENIMIENTOS	= -2;
 	private static final int		PORCENTAJE_COMISION	= 3;
-	private static final Banco		INSTANCE			= new Banco();
+	private static final double		CAMBIO_VIGENTE		= 14.5;
+	private static Banco			INSTANCE;
 
 	private final CuentaEspecial	retenciones;
 	private final CuentaEspecial	mantenimientos;
 
-	public static Banco instance() {
+	public static Banco instance() throws Exception {
+		if (INSTANCE == null) {
+			INSTANCE = new Banco(new CuentaEspecial(CBU_RETENCIONES), new CuentaEspecial(CBU_MANTENIMIENTOS));
+		}
+
 		return INSTANCE;
 	}
 
-	private Banco() {
-		try {
-			retenciones = new CuentaEspecial(CBU_RETENCIONES);
-			mantenimientos = new CuentaEspecial(CBU_MANTENIMIENTOS);
-		} catch (Exception e) {
-			throw new Error();
-		}
+	private Banco(CuentaEspecial retenciones, CuentaEspecial mantenimientos) {
+		this.retenciones = retenciones;
+		this.mantenimientos = mantenimientos;
 	}
 
 	public CuentaEspecial getRetenciones() {
@@ -33,6 +34,6 @@ public final class Banco {
 	}
 
 	public double getCambioVigente() {
-		return 14.5;
+		return CAMBIO_VIGENTE;
 	}
 }
